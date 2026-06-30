@@ -239,3 +239,36 @@ if (mensajeUsuario) {
     });
 }
 
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
+
+if (music && musicBtn) {
+
+    let playing = false;
+
+    musicBtn.addEventListener("click", () => {
+
+        if (!playing) {
+            music.play();
+            musicBtn.innerText = "⏸️ Pausar música";
+            playing = true;
+        } else {
+            music.pause();
+            musicBtn.innerText = "🎵 Modo ambiente";
+            playing = false;
+        }
+
+    });
+    
+
+}
+const abrirChat = document.getElementById("abrirChat");
+const cerrarChat = document.getElementById("cerrarChat");
+const chatBox = document.getElementById("chatBox");
+
+if (abrirChat && cerrarChat && chatBox) {
+
+    abrirChat.onclick = () => chatBox.style.display = "flex";
+    cerrarChat.onclick = () => chatBox.style.display = "none";
+
+}
