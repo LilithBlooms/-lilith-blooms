@@ -14,10 +14,15 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
+
+<body>
+
+<!-- ======================
+MÚSICA (ARREGLADO)
+====================== -->
 <audio id="bgMusic" loop>
     <source src="music/ambiente.mp3" type="audio/mp3">
 </audio>
@@ -25,361 +30,85 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <button id="musicBtn" class="music-btn">
     🎵 Modo ambiente
 </button>
-<body>
 
-<!--======================
+<!-- ======================
 HEADER
-=======================-->
-
+====================== -->
 <header class="header">
 
 <div class="logo">
-
-<img src="IMG_3096.jpeg" class="logo-icon">
-
-<h1>Lilie <span>Blooms</span></h1>
-
+    <img src="IMG_3096.jpeg" class="logo-icon">
+    <h1>Lilie <span>Blooms</span></h1>
 </div>
 
 <nav>
-
 <ul>
-
 <li><a href="#inicio">Inicio</a></li>
-
 <li><a href="#colecciones">Colecciones</a></li>
-
 <li><a href="#productos">Productos</a></li>
-
 <li><a href="#personalizar">Personalizar</a></li>
-
 <li><a href="#galeria">Galería</a></li>
-
 <li><a href="#opiniones">Opiniones</a></li>
-
 <li><a href="#contacto">Contacto</a></li>
-
 </ul>
-
 </nav>
 
 <div class="header-icons">
 
-<button id="modoOscuro">
-
-<i class="fa-solid fa-moon"></i>
-
-</button>
-
 <button id="favoritos">
-
 <i class="fa-solid fa-heart"></i>
-
 <span>0</span>
-
 </button>
 
 <button id="carrito">
-
 <i class="fa-solid fa-cart-shopping"></i>
-
 <span>0</span>
-
 </button>
 
 </div>
 
 </header>
 
-<!--======================
+<!-- ======================
 HERO
-=======================-->
-
+====================== -->
 <section class="hero" id="inicio">
-
 <div class="hero-overlay"></div>
 
 <div class="hero-content">
-
 <h4>Flores hechas con amor</h4>
-
-<h1>
-
-Cada flor cuenta una historia.
-
-</h1>
-
-<p>
-
-Creamos flores artesanales de limpiapipas con acabados premium, personalizadas para cualquier ocasión especial.
-
-</p>
+<h1>Cada flor cuenta una historia.</h1>
+<p>Flores artesanales de limpiapipas personalizadas.</p>
 
 <div class="hero-buttons">
-
-<a href="#productos" class="btnPrincipal">
-
-Comprar ahora
-
-</a>
-
-<a href="#colecciones" class="btnSecundario">
-
-Ver catálogo
-
-</a>
-
+<a href="#productos" class="btnPrincipal">Comprar ahora</a>
+<a href="#colecciones" class="btnSecundario">Ver catálogo</a>
 </div>
-
 </div>
-
 </section>
 
-<!--======================
+<!-- ======================
 COLECCIONES
-=======================-->
-
+====================== -->
 <section class="colecciones" id="colecciones">
 
-<h2>
-
-Nuestras Colecciones
-
-</h2>
-
-<p>
-
-Diseñadas para cada momento especial.
-
-</p>
+<h2>Nuestras Colecciones</h2>
+<p>Diseñadas para cada momento especial.</p>
 
 <div class="grid-colecciones">
 
-<div class="card-coleccion">
-
-🌹
-
-<h3>Rosas</h3>
-
-<p>Elegancia clásica.</p>
-
-</div>
-
-<div class="card-coleccion">
-
-🌻
-
-<h3>Girasoles</h3>
-
-<p>Brillantes y alegres.</p>
-
-</div>
-
-<div class="card-coleccion">
-
-🌷
-
-<h3>Tulipanes</h3>
-
-<p>Delicados y modernos.</p>
-
-</div>
-
-<div class="card-coleccion">
-
-💐
-
-<h3>Ramos Personalizados</h3>
-
-<p>Diseña tu propio ramo.</p>
-
-</div>
-
-<div class="card-coleccion">
-
-🎁
-
-<h3>Cajas Premium</h3>
-
-<p>Regalos inolvidables.</p>
-
-</div>
-
-<div class="card-coleccion">
-
-👰
-
-<h3>Eventos</h3>
-
-<p>Bodas, cumpleaños y más.</p>
-
-</div>
+<div class="card-coleccion">🌹 <h3>Rosas</h3></div>
+<div class="card-coleccion">🌻 <h3>Girasoles</h3></div>
+<div class="card-coleccion">🌷 <h3>Tulipanes</h3></div>
+<div class="card-coleccion">💐 <h3>Personalizados</h3></div>
 
 </div>
 
 </section>
 
-         <!--======================
-CONSTRUCTOR DE RAMOS
-=======================-->
-
-<section class="constructor" id="constructor">
-
-    <h2>🌸 Diseña tu ramo</h2>
-
-    <p>
-        Crea un ramo totalmente personalizado de limpiapipas.
-    </p>
-
-    <div class="constructor-grid">
-
-        <div class="opciones">
-
-            <label>Tipo de flor</label>
-
-            <select id="flor">
-
-                <option value="Rosas">🌹 Rosas</option>
-
-                <option value="Girasoles">🌻 Girasoles</option>
-
-                <option value="Tulipanes">🌷 Tulipanes</option>
-
-                <option value="Margaritas">🌼 Margaritas</option>
-
-                <option value="Lavandas">💜 Lavandas</option>
-
-            </select>
-
-            <label>Color</label>
-
-            <select id="color">
-
-                <option>Rojo</option>
-
-                <option>Rosa</option>
-
-                <option>Blanco</option>
-
-                <option>Amarillo</option>
-
-                <option>Lila</option>
-
-                <option>Azul</option>
-
-            </select>
-
-            <label>Cantidad</label>
-
-            <input
-                type="number"
-                id="cantidad"
-                value="10"
-                min="1"
-                max="100">
-
-            <label>Papel</label>
-
-            <select id="papel">
-
-                <option>Kraft</option>
-
-                <option>Negro</option>
-
-                <option>Blanco</option>
-
-                <option>Rosa</option>
-
-                <option>Dorado</option>
-
-            </select>
-
-            <label>Moño</label>
-
-            <select id="mono">
-
-                <option>Negro</option>
-
-                <option>Blanco</option>
-
-                <option>Rosa</option>
-
-                <option>Dorado</option>
-
-                <option>Rojo</option>
-
-            </select>
-
-            <label>
-
-                <input
-                    type="checkbox"
-                    id="peluche">
-
-                Agregar peluche 🧸
-
-            </label>
-
-            <label>
-
-                <input
-                    type="checkbox"
-                    id="tarjeta">
-
-                Agregar tarjeta 💌
-
-            </label>
-
-        </div>
-
-        <div class="preview">
-
-            <h3>Vista previa</h3>
-
-            <div class="ramo-preview">
-
-                💐
-
-            </div>
-
-            <div class="resumen">
-
-                <p id="resFlor"></p>
-
-                <p id="resColor"></p>
-
-                <p id="resCantidad"></p>
-
-                <p id="resPapel"></p>
-
-                <p id="resMono"></p>
-
-                <p id="extras"></p>
-
-            </div>
-
-            <h2 id="precioFinal">
-
-                RD$0
-
-            </h2>
-
-            <button id="agregarPersonalizado">
-
-                Agregar al carrito
-
-            </button>
-
-        </div>
-
-    </div>
-
-</section> 
-
-<!--======================
-PRODUCTOS DESTACADOS
-=======================-->
-
+<!-- ======================
+PRODUCTOS (ARREGLADO BOTÓN)
+====================== -->
 <section class="destacados" id="productos">
 
 <h2>Productos Destacados</h2>
@@ -387,180 +116,67 @@ PRODUCTOS DESTACADOS
 <div class="productos">
 
 <div class="producto">
-
-<span class="bestseller">
-
-⭐ Bestseller
-
-</span>
-
-
 <img src="IMG_3041.jpeg">
-
 <h3>Sol Eterno</h3>
-
 <p>RD$1,250</p>
-
-<button>
-
-Agregar al carrito
-
-</button>
-
+<button class="agregar-carrito">Agregar al carrito</button>
 </div>
 
 <div class="producto">
-
-<span class="nuevo">
-
-NEW
-
-</span>
 <img src="IMG_3063.jpeg">
-
 <h3>Sueño Rosado</h3>
-
 <p>RD$990</p>
-
-<button>
-
-Agregar al carrito
-
-</button>
-
+<button class="agregar-carrito">Agregar al carrito</button>
 </div>
 
 <div class="producto">
-
 <img src="IMG_3070.jpeg">
-
 <h3>Dulzura en Rosa</h3>
-
 <p>RD$1,100</p>
-
-<button>
-
-Agregar al carrito
-
-</button>
+<button class="agregar-carrito">Agregar al carrito</button>
+</div>
 
 </div>
-          <div class="producto">
-
-            <span class="bestseller">
-                ⭐ Bestseller
-            </span>
-
-            <img src="IMG_3066.jpeg" alt="Bouquet Romantic">
-
-            <h3>Esencia de Hortensia</h3>
-
-            <p>RD$1,350</p>
-
-            <button class="agregar">
-                Agregar al carrito
-            </button>
-
-        </div>
-
-        <div class="producto">
-
-            <img src="IMG_3067.jpeg" alt="Lavender Love">
-
-            <h3>Nube Floral</h3>
-
-            <p>RD$1,050</p>
-
-            <button class="agregar">
-                Agregar al carrito
-            </button>
-
-        </div>
-
-        <div class="producto">
-
-            <span class="nuevo">
-                NEW
-            </span>
-
-            <img src="IMG_3068.jpeg" alt="Sweet Daisy">
-
-            <h3>Tulipán Eterno</h3>
-
-            <p>RD$980</p>
-
-            <button class="agregar">
-                Agregar al carrito
-            </button>
-
-        </div>
-
-        <div class="producto">
-
-
-            <img src="IMG_3069.jpeg" alt="Orquídea Deluxe">
-
-            <h3>Tulipán Brillante Ensueño Iluminado </h3>
-
-            <p>RD$1,850</p>
-
-            <button class="agregar">
-                Agregar al carrito
-            </button>
-
-        </div>
-
-    </div>
 
 </section>
 
-<!--======================
-POR QUÉ ELEGIRNOS
-=======================-->
+<!-- ======================
+CONSTRUCTOR (ARREGLADO IDS)
+====================== -->
+<section class="constructor" id="constructor">
 
-<section class="porque">
+<h2>🌸 Diseña tu ramo</h2>
 
-<h2>¿Por qué elegir Lilie Bloms?</h2>
+<div class="constructor-grid">
 
-<div class="porque-grid">
+<div class="opciones">
 
-<div class="porque-card">
+<label>Tipo de flor</label>
+<select id="florPersonalizada"></select>
 
-<i class="fa-solid fa-truck-fast"></i>
+<label>Color</label>
+<select id="colorPersonalizado"></select>
 
-<h3>Envíos</h3>
+<label>Cantidad</label>
+<input type="number" id="cantidadPersonalizada" value="10">
 
-<p>Entregas rápidas y seguras.</p>
+<label>Papel</label>
+<select id="papelPersonalizado"></select>
 
-</div>
-
-<div class="porque-card">
-
-<i class="fa-solid fa-gift"></i>
-
-<h3>Empaque Premium</h3>
-
-<p>Presentaciones elegantes listas para regalar.</p>
+<label>Moño</label>
+<select id="monoPersonalizado"></select>
 
 </div>
 
-<div class="porque-card">
+<div class="preview">
 
-<i class="fa-solid fa-heart"></i>
+<h3>Vista previa</h3>
 
-<h3>Hecho a Mano</h3>
+<div class="ramo-preview">💐</div>
 
-<p>Cada flor es elaborada artesanalmente.</p>
+<h2 id="precioFinal">RD$0</h2>
 
-</div>
-
-<div class="porque-card">
-
-<i class="fa-solid fa-comments"></i>
-
-<h3>Atención Personalizada</h3>
-
-<p>Te ayudamos a crear el ramo perfecto.</p>
+<button id="agregarPersonalizado">Agregar al carrito</button>
 
 </div>
 
@@ -568,693 +184,83 @@ POR QUÉ ELEGIRNOS
 
 </section>
 
-<!--======================
-COMO COMPRAR
-=======================-->
-
-<section class="pasos">
-
-<h2>¿Cómo comprar?</h2>
-
-<div class="pasos-grid">
-
-<div class="paso">
-
-<div class="numero">1</div>
-
-<h3>Elige tus flores</h3>
-
-</div>
-
-<div class="flecha">
-
-<i class="fa-solid fa-arrow-right"></i>
-
-</div>
-
-<div class="paso">
-
-<div class="numero">2</div>
-
-<h3>Agrégalas al carrito</h3>
-
-</div>
-
-<div class="flecha">
-
-<i class="fa-solid fa-arrow-right"></i>
-
-</div>
-
-<div class="paso">
-
-<div class="numero">3</div>
-
-<h3>Escríbenos por WhatsApp</h3>
-
-</div>
-
-<div class="flecha">
-
-<i class="fa-solid fa-arrow-right"></i>
-
-</div>
-
-<div class="paso">
-
-<div class="numero">4</div>
-
-<h3>Recibe tu pedido</h3>
-
-</div>
-
-</div>
-
-</section>
-
-<!--======================
-CONTADORES
-=======================-->
-
-<section class="contador">
-
-<div>
-
-<h2 id="clientes">0</h2>
-
-<p>Clientes felices</p>
-
-</div>
-
-<div>
-
-<h2 id="ventas">0</h2>
-
-<p>Ramos vendidos</p>
-
-</div>
-
-<div>
-
-<h2 id="envios">0</h2>
-
-<p>Entregas realizadas</p>
-
-</div>
-
-<div>
-
-<h2 id="calificacion">0</h2>
-
-<p>Calificación promedio</p>
-
-</div>
-
-</section>
-
-<!--======================
-PERSONALIZA TU RAMO
-=======================-->
-
+<!-- ======================
+PERSONALIZAR FORM
+====================== -->
 <section class="personalizar" id="personalizar">
 
 <h2>Personaliza tu ramo</h2>
 
 <form id="formPersonalizar">
 
-<label>Tipo de flor</label>
+<select id="p_flor"></select>
+<select id="p_color"></select>
+<input type="number" id="p_cantidad">
+<select id="p_papel"></select>
+<select id="p_mono"></select>
 
-<select>
+<textarea id="p_mensaje"></textarea>
 
-<option>Rosas</option>
-
-<option>Tulipanes</option>
-
-<option>Girasoles</option>
-
-<option>Margaritas</option>
-
-<option>Mixto</option>
-
-</select>
-
-<label>Color</label>
-
-<select>
-
-<option>Rojo</option>
-
-<option>Rosa</option>
-
-<option>Blanco</option>
-
-<option>Amarillo</option>
-
-<option>Morado</option>
-
-<option>Azul</option>
-
-</select>
-
-<label>Cantidad</label>
-
-<input type="number" min="1" value="1">
-
-<label>Papel</label>
-
-<select>
-
-<option>Coreano</option>
-
-<option>Mate</option>
-
-<option>Brillante</option>
-
-<option>Negro</option>
-
-</select>
-
-<label>Moño</label>
-
-<select>
-
-<option>Blanco</option>
-
-<option>Negro</option>
-
-<option>Dorado</option>
-
-<option>Rosa</option>
-
-</select>
-
-<label>Mensaje personalizado</label>
-
-<textarea placeholder="Escribe tu mensaje..."></textarea>
-
-<button type="submit">
-
-Solicitar ramo personalizado
-
-</button>
+<button type="submit">Solicitar ramo</button>
 
 </form>
 
 </section>
-  
-<!--======================
-VIDEO
-=======================-->
 
-<section class="video-section">
-          
-    <h2>Así elaboramos cada ramo</h2>
-
-    <p>
-        Cada flor de limpiapipas es hecha completamente a mano con dedicación y amor.
-    </p>
-          <iframe 
-width="100%" 
-height="400"
-src="https://www.youtube.com/embed/cnmdGbx0SIc"
-title="Lilith Bloms Video"
-frameborder="0"
-allowfullscreen>
-</iframe>
-
-</section>
-
-<!--======================
-GALERÍA
-=======================-->
-
-<section class="galeria" id="galeria">
-
-    <h2>Nuestra Galería</h2>
-
-    <p>Algunos de nuestros trabajos favoritos.</p>
-
-    <div class="galeria-grid">
-
-        <img src="IMG_3083.jpeg" alt="">
-        <img src="IMG_3082.jpeg" alt="">
-        <img src="IMG_3081.jpeg" alt="">
-        <img src="IMG_3080.jpeg" alt="">
-        <img src="IMG_3079.jpeg" alt="">
-        <img src="IMG_3078.jpeg" alt="">
-        <img src="IMG_3077.jpeg" alt="">
-        <img src="IMG_3076.jpeg" alt="">
-        <img src="IMG_3075.jpeg" alt="">
-        <img src="IMG_3074.jpeg" alt="">
-        <img src="IMG_3073.jpeg" alt="">
-        <img src="IMG_3072.jpeg" alt="">
-
-    </div>
-
-</section>
-
-<!--======================
-OPINIONES
-=======================-->
-
-<section class="opiniones" id="opiniones">
-
-<h2>Lo que dicen nuestros clientes</h2>
-
-<div class="opiniones-grid">
-
-<div class="opinion">
-
-★★★★★
-
-<p>
-
-Quedó muchísimo más bonito de lo que esperaba.
-
-</p>
-
-<h4>- Ashley</h4>
-
-</div>
-
-<div class="opinion">
-
-★★★★★
-
-<p>
-
-Excelente atención y envío súper rápido.
-
-</p>
-
-<h4>- Daniela</h4>
-
-</div>
-
-<div class="opinion">
-
-★★★★★
-
-<p>
-
-Sin duda volveré a comprar.
-
-</p>
-
-<h4>- Camila</h4>
-
-</div>
-
-</div>
-
-</section>
-
-<!--======================
-PREGUNTAS FRECUENTES
-=======================-->
-
-<section class="faq">
-
-<h2>Preguntas frecuentes</h2>
-
-<div class="faq-item">
-
-<button>
-
-¿Hacen envíos?
-
-</button>
-
-<div>
-
-Sí. Realizamos entregas en Santo Domingo y zonas cercanas.
-
-</div>
-
-</div>
-
-<div class="faq-item">
-
-<button>
-
-¿Cuánto tarda el pedido?
-
-</button>
-
-<div>
-
-Generalmente entre 24 y 48 horas.
-
-</div>
-
-</div>
-
-<div class="faq-item">
-
-<button>
-
-¿Puedo personalizar mi ramo?
-
-</button>
-
-<div>
-
-Sí. Puedes escoger colores, flores, cantidad y mensaje.
-
-</div>
-
-</div>
-
-<div class="faq-item">
-
-<button>
-
-¿Qué métodos de pago aceptan?
-
-</button>
-
-<div>
-
-Transferencias, efectivo y otros métodos que iremos agregando.
-
-</div>
-
-</div>
-
-</section>
-
-<!--======================
-NEWSLETTER
-=======================-->
-
-<section class="newsletter">
-
-<h2>
-
-Recibe promociones y novedades
-
-</h2>
-
-<p>
-
-Suscríbete para enterarte antes que nadie de nuestros nuevos diseños.
-
-</p>
-
-<form>
-
-<input type="email"
-placeholder="Tu correo electrónico">
-
-<button>
-
-Suscribirme
-
-</button>
-
-</form>
-
-</section>
-
-<!--======================
-CONTACTO
-=======================-->
-
-<section class="contacto" id="contacto">
-
-<h2>Contáctanos</h2>
-
-<div class="contacto-grid">
-
-<form>
-
-<input
-type="text"
-placeholder="Nombre">
-
-<input
-type="email"
-placeholder="Correo">
-
-<textarea
-placeholder="Escribe tu mensaje"></textarea>
-
-<button>
-
-Enviar mensaje
-
-</button>
-
-</form>
-
-<div class="info-contacto">
-
-<h3>Información</h3>
-
-<p>
-
-📱 WhatsApp:
-+1 (829) 692-6964
-
-</p>
-
-<p>
-
-📍 Santo Domingo,
-República Dominicana
-
-</p>
-
-<p>
-
-🕒 Lunes a Domingo
-
-9:00 AM - 8:00 PM
-
-</p>
-
-<div class="redes">
-
-<a href="#"><i class="fab fa-instagram"></i></a>
-
-<a href="#"><i class="fab fa-tiktok"></i></a>
-
-<a href="#"><i class="fab fa-facebook"></i></a>
-
-<a href="#"><i class="fab fa-whatsapp"></i></a>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-  <!--======================
-FOOTER
-=======================-->
-
-<footer class="footer">
-
-<div class="footer-container">
-
-    <div class="footer-col">
-
-        <h2>Lilie Blooms</h2>
-
-        <p>
-            Flores artesanales de limpiapipas hechas con amor y dedicación.
-        </p>
-
-    </div>
-
-    <div class="footer-col">
-
-        <h3>Enlaces</h3>
-
-        <ul>
-            <li><a href="#inicio">Inicio</a></li>
-            <li><a href="#colecciones">Colecciones</a></li>
-            <li><a href="#productos">Productos</a></li>
-            <li><a href="#personalizar">Personalizar</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-        </ul>
-
-    </div>
-
-    <div class="footer-col">
-
-        <h3>Políticas</h3>
-
-        <ul>
-            <li><a href="#">Términos y condiciones</a></li>
-            <li><a href="#">Política de privacidad</a></li>
-            <li><a href="#">Política de envíos</a></li>
-        </ul>
-
-    </div>
-
-    <div class="footer-col">
-
-        <h3>Redes</h3>
-
-        <div class="footer-redes">
-
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-tiktok"></i></a>
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-whatsapp"></i></a>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div class="footer-bottom">
-
-    <p>
-        © 2026 Lilie Blooms. Todos los derechos reservados.
-    </p>
-
-</div>
-
-</footer>
-
-<!--======================
-CARRITO LATERAL
-=======================-->
-
+<!-- ======================
+CARRITO
+====================== -->
 <div class="carrito-lateral" id="carritoLateral">
 
 <div class="carrito-header">
-
 <h3>Tu carrito</h3>
-
 <button id="cerrarCarrito">✖</button>
-
 </div>
 
-<div class="carrito-items">
-
-<!-- JS insertará productos aquí -->
-
-</div>
+<div class="carrito-items"></div>
 
 <div class="carrito-total">
-
 <h3>Total: RD$0</h3>
 
 <button>
-
 Pagar por WhatsApp
-
 </button>
 
 </div>
 
 </div>
 
-<!--======================
-OVERLAY
-=======================-->
-
 <div class="overlay" id="overlay"></div>
 
-<!--======================
-SCRIPT
-=======================-->
-
-                    <!--======================
-LILITH AI
-=======================-->
-
+<!-- ======================
+CHAT IA (ARREGLADO OK)
+====================== -->
 <div class="lilie-ai">
 
-    <button id="abrirChat" class="chat-boton">
+<button id="abrirChat" class="chat-boton">🌸</button>
 
-        🌸
+<div class="chat-box" id="chatBox">
 
-    </button>
+<div class="chat-header">
+<h3>🌸 Lilie AI</h3>
+<button id="cerrarChat">✕</button>
+</div>
 
-    <div class="chat-box" id="chatBox">
+<div class="chat-mensajes" id="chatMensajes"></div>
 
-        <div class="chat-header">
+<div class="chat-input">
+<input id="mensajeUsuario" placeholder="Escribe...">
+<button id="enviarMensaje">Enviar</button>
+</div>
 
-            <div>
+</div>
 
-                <h3>🌸 Lilie AI</h3>
+</div>
 
-                <span>● En línea</span>
-
-            </div>
-
-            <button id="cerrarChat">
-
-                ✕
-
-            </button>
-
-        </div>
-
-        <div class="chat-mensajes" id="chatMensajes">
-
-            <div class="bot">
-
-                ¡Hola! 💐
-
-                Soy <b>Lilie AI</b>.
-
-                Estoy aquí para ayudarte con cualquier duda sobre nuestros ramos de limpiapipas.
-
-            </div>
-
-        </div>
-
-        <div class="preguntas-rapidas">
-
-            <button class="pregunta">
-                ¿Hacen envíos?
-            </button>
-
-            <button class="pregunta">
-                Quiero personalizar un ramo
-            </button>
-
-            <button class="pregunta">
-                ¿Cuánto tarda?
-            </button>
-
-            <button class="pregunta">
-                ¿Cuál es el WhatsApp?
-            </button>
-
-        </div>
-
-        <div class="chat-input">
-
-            <input
-                type="text"
-                id="mensajeUsuario"
-                placeholder="Escribe tu pregunta...">
-
-            <button id="enviarMensaje">
-
-                Enviar
-
-            </button>
-
-        </div>
-
-    </div>
-
-</div>  
-
+<!-- ======================
+SCRIPT
+====================== -->
 <script src="script.js"></script>
 
 </body>
 </html>
-  
-
-  
