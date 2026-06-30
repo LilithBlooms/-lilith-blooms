@@ -136,7 +136,7 @@ document.querySelectorAll(".producto button").forEach(btn=>{
 
     contadorCarrito.innerHTML=carrito.length;
 
-}   });
+localStorage.setItem("carrito", JSON.stringify(carrito));}   });
 
 });eliminar(${index})">X</button>
         `;
@@ -445,6 +445,7 @@ function actualizarConstructor(){
 });
 
 actualizarConstructor();
+actualizarCarrito();
 
 /*======================
 AGREGAR AL CARRITO
