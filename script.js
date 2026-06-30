@@ -1,53 +1,48 @@
-/*======================
-CARRITO LIMPIO Y FUNCIONAL
-======================*/
+/* ======================
+UTILIDAD SEGURA
+====================== */
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
 
+/* ======================
+CARRITO
+====================== */
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-const contadorCarrito = document.querySelector("#carrito span");
-const carritoBtn = document.getElementById("carrito");
-const carritoLateral = document.getElementById("carritoLateral");
-const cerrarCarrito = document.getElementById("cerrarCarrito");
-const overlay = document.getElementById("overlay");
-const carritoItems = document.querySelector(".carrito-items");
-const carritoTotal = document.querySelector(".carrito-total h3");
+const carritoBtn = $("#carrito");
+const carritoLateral = $("#carritoLateral");
+const cerrarCarrito = $("#cerrarCarrito");
+const overlay = $("#overlay");
+const carritoItems = $(".carrito-items");
+const carritoTotal = $(".carrito-total h3");
+const contadorCarrito = $("#carrito span");
 
-/* ======================
-ABRIR / CERRAR CARRITO
-====================== */
+function abrirCarrito() {
+    carritoLateral?.classList.add("active");
+    overlay?.classList.add("active");
+}
 
 function cerrar() {
-    carritoLateral.classList.remove("active");
-    overlay.classList.remove("active");
+    carritoLateral?.classList.remove("active");
+    overlay?.classList.remove("active");
 }
 
-if (carritoBtn) {
-    carritoBtn.onclick = () => {
-        carritoLateral.classList.add("active");
-        overlay.classList.add("active");
-    };
-}
-
-if (cerrarCarrito) cerrarCarrito.onclick = cerrar;
-if (overlay) overlay.onclick = cerrar;
+carritoBtn?.addEventListener("click", abrirCarrito);
+cerrarCarrito?.addEventListener("click", cerrar);
+overlay?.addEventListener("click", cerrar);
 
 /* ======================
-AGREGAR PRODUCTOS
+AGREGAR AL CARRITO
 ====================== */
-
-document.querySelectorAll(".producto button").forEach(btn => {
+$$(".producto button").forEach(btn => {
     btn.addEventListener("click", () => {
+
         const producto = btn.closest(".producto");
+        if (!producto) return;
 
-        const nombre = producto.querySelector("h3").innerText;
-
-        const precio = Number(
-            producto.querySelector("p").innerText
-                .replace("RD$", "")
-                .replace(",", "")
-        );
-
-        const imagen = producto.querySelector("img").src;
+        const nombre = producto.querySelector("h3")?.innerText || "Producto";
+        const precio = Number(producto.querySelector("p")?.innerText.replace("RD$", "").replace(",", "")) || 0;
+        const imagen = producto.querySelector("img")?.src || "";
 
         carrito.push({
             nombre,
@@ -63,33 +58,34 @@ document.querySelectorAll(".producto button").forEach(btn => {
 /* ======================
 ACTUALIZAR CARRITO
 ====================== */
-
 function actualizarCarrito() {
+
+    if (!carritoItems || !carritoTotal || !contadorCarrito) return;
 
     carritoItems.innerHTML = "";
 
     let total = 0;
 
-    carrito.forEach((item, index) => {
+    carrito.forEach((item, i) => {
 
         total += item.precio * item.cantidad;
 
         carritoItems.innerHTML += `
-            <div style="display:flex;gap:10px;align-items:center;margin:10px 0;">
-                <img src="${item.imagen}" style="width:60px;height:60px;object-fit:cover;border-radius:10px;">
-                <div style="flex:1;">
-                    <strong>${item.nombre}</strong>
-                    <p>RD$${item.precio}</p>
+        <div style="display:flex;gap:10px;align-items:center;margin:10px 0;">
+            <img src="${item.imagen}" style="width:60px;height:60px;object-fit:cover;border-radius:10px;">
+            <div style="flex:1;">
+                <strong>${item.nombre}</strong>
+                <p>RD$${item.precio}</p>
 
-                    <div>
-                        <button onclick="restar(${index})">-</button>
-                        <span>${item.cantidad}</span>
-                        <button onclick="sumar(${index})">+</button>
-                    </div>
+                <div>
+                    <button onclick="restar(${i})">-</button>
+                    <span>${item.cantidad}</span>
+                    <button onclick="sumar(${i})">+</button>
                 </div>
-
-                <button onclick="eliminar(${index})">🗑️</button>
             </div>
+
+            <button onclick="eliminar(${i})">🗑️</button>
+        </div>
         `;
     });
 
@@ -99,176 +95,150 @@ function actualizarCarrito() {
     localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
-/* ======================
-FUNCIONES
-====================== */
-
-function eliminar(i) {
+window.eliminar = (i) => {
     carrito.splice(i, 1);
     actualizarCarrito();
-}
+};
 
-function sumar(i) {
+window.sumar = (i) => {
     carrito[i].cantidad++;
     actualizarCarrito();
-}
+};
 
-function restar(i) {
+window.restar = (i) => {
     carrito[i].cantidad--;
     if (carrito[i].cantidad <= 0) carrito.splice(i, 1);
     actualizarCarrito();
+};
+
+/* ======================
+WHATSAPP (CARRITO)
+====================== */
+$(".carrito-total button")?.addEventListener("click", () => {
+
+    let mensaje = "Hola 👋 quiero este pedido:%0A%0A";
+
+    carrito.forEach(item => {
+        mensaje += `- ${item.nombre} (RD$${item.precio}) x${item.cantidad}%0A`;
+    });
+
+    const url = "https://wa.me/18296926964?text=" + encodeURIComponent(mensaje);
+    window.open(url, "_blank");
+});
+
+/* ======================
+FAVORITOS
+====================== */
+let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+const favBtn = $("#favoritos span");
+
+function actualizarFavoritos() {
+    if (favBtn) favBtn.innerText = favoritos.length;
+    localStorage.setItem("favoritos", JSON.stringify(favoritos));
 }
+
+$$(".favorito-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+
+        const producto = btn.closest(".producto");
+        if (!producto) return;
+
+        const nombre = producto.querySelector("h3")?.innerText;
+
+        if (!nombre) return;
+
+        if (favoritos.includes(nombre)) {
+            favoritos = favoritos.filter(f => f !== nombre);
+            btn.classList.remove("activo");
+            btn.innerHTML = "🤍";
+        } else {
+            favoritos.push(nombre);
+            btn.classList.add("activo");
+            btn.innerHTML = "❤️";
+        }
+
+        actualizarFavoritos();
+    });
+});
+
+actualizarFavoritos();
+
+/* ======================
+FORM PERSONALIZAR (WHATSAPP)
+====================== */
+$("#formPersonalizar")?.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const data = this.querySelectorAll("select, input, textarea");
+
+    let mensaje = "Hola 👋 quiero un ramo personalizado:%0A%0A";
+
+    mensaje += `Flor: ${data[0].value}%0A`;
+    mensaje += `Color: ${data[1].value}%0A`;
+    mensaje += `Cantidad: ${data[2].value}%0A`;
+    mensaje += `Papel: ${data[3].value}%0A`;
+    mensaje += `Moño: ${data[4].value}%0A`;
+
+    if (data[5].value) {
+        mensaje += `Mensaje: ${data[5].value}%0A`;
+    }
+
+    const url = "https://wa.me/18296926964?text=" + encodeURIComponent(mensaje);
+    window.open(url, "_blank");
+});
+
+/* ======================
+LILITH AI (CHAT)
+====================== */
+const abrirChat = $("#abrirChat");
+const cerrarChat = $("#cerrarChat");
+const chatBox = $("#chatBox");
+const chatMensajes = $("#chatMensajes");
+const input = $("#mensajeUsuario");
+const enviar = $("#enviarMensaje");
+
+function bot(texto) {
+
+    texto = texto.toLowerCase();
+
+    if (texto.includes("envio")) return "🚚 Sí hacemos envíos en Santo Domingo.";
+    if (texto.includes("precio")) return "💐 Tenemos ramos desde RD$900 en adelante.";
+    if (texto.includes("personal")) return "🎀 Sí, puedes personalizar tu ramo completamente.";
+    if (texto.includes("hola")) return "🌸 ¡Hola! Soy Lilith AI, ¿en qué te ayudo?";
+
+    return "💐 Escríbenos por WhatsApp al +1 (829) 692-6964 para ayudarte mejor.";
+}
+
+function addMsg(text, cls) {
+    if (!chatMensajes) return;
+
+    chatMensajes.innerHTML += `<div class="${cls}">${text}</div>`;
+    chatMensajes.scrollTop = chatMensajes.scrollHeight;
+}
+
+abrirChat?.addEventListener("click", () => chatBox?.classList.add("active"));
+cerrarChat?.addEventListener("click", () => chatBox?.classList.remove("active"));
+
+function enviarMsg() {
+    if (!input) return;
+
+    const texto = input.value.trim();
+    if (!texto) return;
+
+    addMsg(texto, "usuario");
+    addMsg(bot(texto), "bot");
+
+    input.value = "";
+}
+
+enviar?.addEventListener("click", enviarMsg);
+input?.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") enviarMsg();
+});
 
 /* ======================
 INICIALIZAR
 ====================== */
-
 actualizarCarrito();
 
-document.getElementById("formPersonalizar").addEventListener("submit", function(e){
-    e.preventDefault();
-    
-
-    let flor = this.querySelectorAll("select")[0].value;
-    let color = this.querySelectorAll("select")[1].value;
-    let cantidad = this.querySelector("input").value;
-    let papel = this.querySelectorAll("select")[2].value;
-    let mono = this.querySelectorAll("select")[3].value;
-    let mensajeExtra = this.querySelector("textarea").value;
-
-    let mensaje = "Hola 👋 buenas tardes.%0A%0A";
-    mensaje += "Quiero hacer un ramo personalizado de limpiapipas.%0A%0A";
-    mensaje += "🌸 Flor: " + flor + "%0A";
-    mensaje += "🎨 Color: " + color + "%0A";
-    mensaje += "💐 Cantidad: " + cantidad + "%0A";
-    mensaje += "📦 Papel: " + papel + "%0A";
-    mensaje += "🎀 Moño: " + mono + "%0A";
-
-    if(mensajeExtra !== ""){
-        mensaje += "%0A💌 Mensaje: " + mensajeExtra + "%0A";
-    }
-
-    let url = "https://wa.me/18296926964?text=" + mensaje;
-
-    window.open(url, "_blank");
-});
-const music = document.getElementById("bgMusic");
-const musicBtn = document.getElementById("musicBtn");
-
-let playing = false;
-
-if (musicBtn && music && music.play) {
-    musicBtn.addEventListener("click", async () => {
-        try {
-            if (!playing) {
-                await music.play();
-                musicBtn.innerText = "⏸️ Pausar música";
-                playing = true;
-            } else {
-                music.pause();
-                musicBtn.innerText = "🎵 Modo ambiente";
-                playing = false;
-            }
-        } catch (e) {
-            console.log("El navegador bloqueó el audio hasta interacción.");
-        }
-    });
-}
-});
-document.body.style.opacity = 0;
-
-window.addEventListener("load", () => {
-    document.body.style.transition = "1s ease";
-    document.body.style.opacity = 1;
-});
-const abrirChat = document.getElementById("abrirChat");
-const cerrarChat = document.getElementById("cerrarChat");
-const chatBox = document.getElementById("chatBox");
-const chatMensajes = document.getElementById("chatMensajes");
-const mensajeUsuario = document.getElementById("mensajeUsuario");
-const enviarMensaje = document.getElementById("enviarMensaje");
-
-if (abrirChat && chatBox) {
-    abrirChat.onclick = () => chatBox.style.display = "flex";
-}
-
-if (cerrarChat && chatBox) {
-    cerrarChat.onclick = () => chatBox.style.display = "none";
-}
-
-function agregarMensaje(texto, clase) {
-    if (!chatMensajes) return;
-
-    chatMensajes.innerHTML += `
-        <div class="${clase}">${texto}</div>
-    `;
-
-    chatMensajes.scrollTop = chatMensajes.scrollHeight;
-}
-
-function responder(texto) {
-    texto = texto.toLowerCase();
-
-    if (texto.includes("envio")) return "🚚 Sí, hacemos envíos.";
-    if (texto.includes("precio")) return "💐 Tenemos diferentes precios según el ramo.";
-    if (texto.includes("hola")) return "🌸 ¡Hola! ¿Cómo te ayudo?";
-
-    return "🌸 Escríbenos por WhatsApp para más info.";
-}
-
-function enviar() {
-    if (!mensajeUsuario) return;
-
-    let texto = mensajeUsuario.value.trim();
-    if (!texto) return;
-
-    agregarMensaje(texto, "usuario");
-
-    setTimeout(() => {
-        agregarMensaje(responder(texto), "bot");
-    }, 500);
-
-    mensajeUsuario.value = "";
-}
-
-if (enviarMensaje) enviarMensaje.onclick = enviar;
-
-if (mensajeUsuario) {
-    mensajeUsuario.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") enviar();
-    });
-}
-
-const music = document.getElementById("bgMusic");
-const musicBtn = document.getElementById("musicBtn");
-
-if (music && musicBtn) {
-
-    let playing = false;
-
-    musicBtn.addEventListener("click", () => {
-
-        if (!playing) {
-            music.play();
-            musicBtn.innerText = "⏸️ Pausar música";
-            playing = true;
-        } else {
-            music.pause();
-            musicBtn.innerText = "🎵 Modo ambiente";
-            playing = false;
-        }
-
-    });
-    
-
-}
-const abrirChat = document.getElementById("abrirChat");
-const cerrarChat = document.getElementById("cerrarChat");
-const chatBox = document.getElementById("chatBox");
-
-if (abrirChat && cerrarChat && chatBox) {
-
-    abrirChat.onclick = () => chatBox.style.display = "flex";
-    cerrarChat.onclick = () => chatBox.style.display = "none";
-
-}
+console.log("Lilith Blooms PRO cargado 💐");
