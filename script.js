@@ -151,4 +151,21 @@ document.getElementById("formPersonalizar").addEventListener("submit", function(
 
     window.open(url, "_blank");
 });
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
 
+let playing = false;
+
+musicBtn.addEventListener("click", () => {
+
+    if (!playing) {
+        music.play();
+        musicBtn.innerText = "⏸️ Pausar música";
+        playing = true;
+    } else {
+        music.pause();
+        musicBtn.innerText = "🎵 Modo ambiente";
+        playing = false;
+    }
+
+});
