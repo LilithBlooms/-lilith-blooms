@@ -1012,7 +1012,15 @@ SCRIPT
 =======================-->
 
 <script src="script.js"></script>
-
+<!-- NOTIFICACIONES -->
+<div id="toast-container"></div>
+       <script>
+document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("lb_tema") === "oscuro") {
+        document.body.classList.add("dark");
+    }
+});
+</script> 
 </body>
 </html>
 
