@@ -377,3 +377,71 @@ function anim(id, val, dec = false){
 }
 
 console.log("Lilith Blooms PRO listo 🌸");
+
+
+/*======================
+IA ASISTENTE
+======================*/
+
+const iaBoton = document.getElementById("ia-boton");
+const iaChat = document.getElementById("ia-chat");
+const iaClose = document.getElementById("ia-close");
+const iaEnviar = document.getElementById("ia-enviar");
+const iaTexto = document.getElementById("ia-texto");
+const iaMensajes = document.getElementById("ia-mensajes");
+
+iaBoton.onclick = () => {
+    iaChat.style.display = "flex";
+    if (iaMensajes.innerHTML === "") {
+        bot("Hola 🌸 soy el asistente de Lilith Blooms. ¿Qué flor buscas?");
+    }
+};
+
+iaClose.onclick = () => {
+    iaChat.style.display = "none";
+};
+
+iaEnviar.onclick = enviarIA;
+
+iaTexto.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") enviarIA();
+});
+
+function enviarIA() {
+    const texto = iaTexto.value.trim();
+    if (!texto) return;
+
+    user(texto);
+    iaTexto.value = "";
+
+    setTimeout(() => responder(texto.toLowerCase()), 500);
+}
+
+function user(msg) {
+    iaMensajes.innerHTML += `<div class="msj user">Tú: ${msg}</div>`;
+    iaMensajes.scrollTop = iaMensajes.scrollHeight;
+}
+
+function bot(msg) {
+    iaMensajes.innerHTML += `<div class="msj bot">🌸 ${msg}</div>`;
+    iaMensajes.scrollTop = iaMensajes.scrollHeight;
+}
+
+function responder(msg) {
+
+    if (msg.includes("rosa")) {
+        bot("Las rosas son perfectas para amor y detalles románticos 💖");
+    }
+    else if (msg.includes("girasol")) {
+        bot("Los girasoles representan alegría y energía 🌻");
+    }
+    else if (msg.includes("regalo")) {
+        bot("Te recomiendo un Bouquet Romantic o una caja premium 🎁");
+    }
+    else if (msg.includes("precio")) {
+        bot("Nuestros precios van desde RD$900 en adelante 🌸");
+    }
+    else {
+        bot("Puedo ayudarte a elegir flores, regalos o personalizar tu ramo 💐");
+    }
+}
