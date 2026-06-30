@@ -445,3 +445,17 @@ function responder(msg) {
         bot("Puedo ayudarte a elegir flores, regalos o personalizar tu ramo 💐");
     }
 }
+function crearCorazon() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart-float");
+    heart.innerText = "❤";
+
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.fontSize = (10 + Math.random() * 20) + "px";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 6000);
+}
+
+setInterval(crearCorazon, 1200);
