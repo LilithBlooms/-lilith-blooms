@@ -458,8 +458,6 @@ function crearCorazon() {
     setTimeout(() => heart.remove(), 6000);
 }
 
-setInterval(crearCorazon, 1200);
-
 
 function crearEfectoAesthetic() {
 
@@ -492,5 +490,19 @@ function crearEfectoAesthetic() {
 }
 
 // ritmo suave (no saturado)
-setInterval(crearEfectoAesthetic, 800);
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    // control de intensidad (evita saturación o lag en móvil)
+    setInterval(() => {
+        if (document.hidden) return;
+        crearCorazon();
+    }, 1200);
+
+    setInterval(() => {
+        if (document.hidden) return;
+        crearEfectoAesthetic();
+    }, 900);
+
+});
 
