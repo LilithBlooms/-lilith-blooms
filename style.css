@@ -671,6 +671,80 @@ FOOTER
     border-top: 1px solid #333;
     padding-top: 15px;
 }
+.btn-favorito {
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.btn-favorito:hover {
+    transform: scale(1.1);
+}
+
+.btn-favorito i {
+    color: #aaa;
+}
+
+.btn-favorito.activo i {
+    color: #e91e63;
+}
+.carrito-items div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.carrito-items button {
+    background: #e91e63;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.vaciar-carrito {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: black;
+    color: white;
+    cursor: pointer;
+}
+body.dark {
+    background: #121212;
+    color: white;
+}
+
+body.dark .producto,
+body.dark .card-coleccion,
+body.dark .opinion,
+body.dark .paso,
+body.dark .faq-item div {
+    background: #1e1e1e;
+    color: white;
+}
+
+body.dark .header {
+    background: rgba(20,20,20,0.8);
+}
+.toast {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.3s;
+}
+
+.toast.mostrar {
+    opacity: 1;
+    transform: translateY(0);
+}
 
 /*======================
 CARRITO
