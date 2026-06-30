@@ -3,7 +3,7 @@
 CARRO Y FUNCIONES BASE
 ======================*/
 
-let carrito = [];
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 let contadorCarrito = document.querySelector("#carrito span");
 let carritoBtn = document.getElementById("carrito");
 let carritoLateral = document.getElementById("carritoLateral");
