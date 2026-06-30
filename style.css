@@ -949,3 +949,25 @@ IA CHAT
     text-align: left;
     color: #e91e63;
 }
+
+.heart-float {
+    position: fixed;
+    bottom: -20px;
+    color: #ff4d88;
+    font-size: 18px;
+    animation: subir 6s linear forwards;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+@keyframes subir {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-110vh) scale(0.5);
+        opacity: 0;
+    }
+}
