@@ -188,12 +188,6 @@ document.querySelectorAll(".producto").forEach(p => {
 
     btn.innerText = "❤";
 
-    btn.style.position = "absolute";
-    btn.style.top = "10px";
-    btn.style.right = "10px";
-
-    p.style.position = "relative";
-
     p.appendChild(btn);
 
     const nombre = p.querySelector("h3").innerText;
