@@ -124,3 +124,31 @@ INICIALIZAR
 ====================== */
 
 actualizarCarrito();
+
+document.getElementById("formPersonalizar").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let flor = this.querySelectorAll("select")[0].value;
+    let color = this.querySelectorAll("select")[1].value;
+    let cantidad = this.querySelector("input").value;
+    let papel = this.querySelectorAll("select")[2].value;
+    let mono = this.querySelectorAll("select")[3].value;
+    let mensajeExtra = this.querySelector("textarea").value;
+
+    let mensaje = "Hola 👋 buenas tardes.%0A%0A";
+    mensaje += "Quiero hacer un ramo personalizado de limpiapipas.%0A%0A";
+    mensaje += "🌸 Flor: " + flor + "%0A";
+    mensaje += "🎨 Color: " + color + "%0A";
+    mensaje += "💐 Cantidad: " + cantidad + "%0A";
+    mensaje += "📦 Papel: " + papel + "%0A";
+    mensaje += "🎀 Moño: " + mono + "%0A";
+
+    if(mensajeExtra !== ""){
+        mensaje += "%0A💌 Mensaje: " + mensajeExtra + "%0A";
+    }
+
+    let url = "https://wa.me/18296926964?text=" + mensaje;
+
+    window.open(url, "_blank");
+});
+
