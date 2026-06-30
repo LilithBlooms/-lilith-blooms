@@ -1,73 +1,61 @@
 /* ======================
 UTILIDAD SEGURA
 ====================== */
-const $ = (sel) => document.querySelector(sel);
-const $$ = (sel) => document.querySelectorAll(sel);
+const $ = (id) => document.getElementById(id);
 
 /* ======================
 CARRITO
 ====================== */
+
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
+const contadorCarrito = $("#carrito")?.querySelector("span");
 const carritoBtn = $("#carrito");
 const carritoLateral = $("#carritoLateral");
 const cerrarCarrito = $("#cerrarCarrito");
 const overlay = $("#overlay");
-const carritoItems = $(".carrito-items");
-const carritoTotal = $(".carrito-total h3");
-const contadorCarrito = $("#carrito span");
-
-function abrirCarrito() {
-    carritoLateral?.classList.add("active");
-    overlay?.classList.add("active");
-}
+const carritoItems = document.querySelector(".carrito-items");
+const carritoTotal = document.querySelector(".carrito-total h3");
 
 function cerrar() {
     carritoLateral?.classList.remove("active");
     overlay?.classList.remove("active");
 }
 
-carritoBtn?.addEventListener("click", abrirCarrito);
+carritoBtn?.addEventListener("click", () => {
+    carritoLateral?.classList.add("active");
+    overlay?.classList.add("active");
+});
+
 cerrarCarrito?.addEventListener("click", cerrar);
 overlay?.addEventListener("click", cerrar);
 
-/* ======================
-AGREGAR AL CARRITO
-====================== */
-$$(".producto button").forEach(btn => {
+/* AGREGAR PRODUCTOS */
+document.querySelectorAll(".producto button").forEach(btn => {
     btn.addEventListener("click", () => {
-
         const producto = btn.closest(".producto");
         if (!producto) return;
 
         const nombre = producto.querySelector("h3")?.innerText || "Producto";
-        const precio = Number(producto.querySelector("p")?.innerText.replace("RD$", "").replace(",", "")) || 0;
+        const precio = Number(
+            (producto.querySelector("p")?.innerText || "0")
+            .replace("RD$", "")
+            .replace(",", "")
+        );
         const imagen = producto.querySelector("img")?.src || "";
 
-        carrito.push({
-            nombre,
-            precio,
-            imagen,
-            cantidad: 1
-        });
-
+        carrito.push({ nombre, precio, imagen, cantidad: 1 });
         actualizarCarrito();
     });
 });
 
-/* ======================
-ACTUALIZAR CARRITO
-====================== */
 function actualizarCarrito() {
-
-    if (!carritoItems || !carritoTotal || !contadorCarrito) return;
+    if (!carritoItems) return;
 
     carritoItems.innerHTML = "";
-
     let total = 0;
 
-    carrito.forEach((item, i) => {
-
+    carrito.forEach((item, index) => {
         total += item.precio * item.cantidad;
 
         carritoItems.innerHTML += `
@@ -78,167 +66,88 @@ function actualizarCarrito() {
                 <p>RD$${item.precio}</p>
 
                 <div>
-                    <button onclick="restar(${i})">-</button>
+                    <button onclick="restar(${index})">-</button>
                     <span>${item.cantidad}</span>
-                    <button onclick="sumar(${i})">+</button>
+                    <button onclick="sumar(${index})">+</button>
                 </div>
             </div>
 
-            <button onclick="eliminar(${i})">🗑️</button>
-        </div>
-        `;
+            <button onclick="eliminar(${index})">🗑️</button>
+        </div>`;
     });
 
-    carritoTotal.innerText = "Total: RD$" + total.toLocaleString();
-    contadorCarrito.innerText = carrito.length;
+    if (carritoTotal) carritoTotal.innerText = "Total: RD$" + total.toLocaleString();
+    if (contadorCarrito) contadorCarrito.innerText = carrito.length;
 
     localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
-window.eliminar = (i) => {
-    carrito.splice(i, 1);
-    actualizarCarrito();
-};
-
-window.sumar = (i) => {
-    carrito[i].cantidad++;
-    actualizarCarrito();
-};
-
-window.restar = (i) => {
+function eliminar(i){ carrito.splice(i,1); actualizarCarrito(); }
+function sumar(i){ carrito[i].cantidad++; actualizarCarrito(); }
+function restar(i){
     carrito[i].cantidad--;
-    if (carrito[i].cantidad <= 0) carrito.splice(i, 1);
+    if(carrito[i].cantidad<=0) carrito.splice(i,1);
     actualizarCarrito();
-};
-
-/* ======================
-WHATSAPP (CARRITO)
-====================== */
-$(".carrito-total button")?.addEventListener("click", () => {
-
-    let mensaje = "Hola 👋 quiero este pedido:%0A%0A";
-
-    carrito.forEach(item => {
-        mensaje += `- ${item.nombre} (RD$${item.precio}) x${item.cantidad}%0A`;
-    });
-
-    const url = "https://wa.me/18296926964?text=" + encodeURIComponent(mensaje);
-    window.open(url, "_blank");
-});
-
-/* ======================
-FAVORITOS
-====================== */
-let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-const favBtn = $("#favoritos span");
-
-function actualizarFavoritos() {
-    if (favBtn) favBtn.innerText = favoritos.length;
-    localStorage.setItem("favoritos", JSON.stringify(favoritos));
 }
 
-$$(".favorito-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-
-        const producto = btn.closest(".producto");
-        if (!producto) return;
-
-        const nombre = producto.querySelector("h3")?.innerText;
-
-        if (!nombre) return;
-
-        if (favoritos.includes(nombre)) {
-            favoritos = favoritos.filter(f => f !== nombre);
-            btn.classList.remove("activo");
-            btn.innerHTML = "🤍";
-        } else {
-            favoritos.push(nombre);
-            btn.classList.add("activo");
-            btn.innerHTML = "❤️";
-        }
-
-        actualizarFavoritos();
-    });
-});
-
-actualizarFavoritos();
-
-/* ======================
-FORM PERSONALIZAR (WHATSAPP)
-====================== */
-$("#formPersonalizar")?.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const data = this.querySelectorAll("select, input, textarea");
-
-    let mensaje = "Hola 👋 quiero un ramo personalizado:%0A%0A";
-
-    mensaje += `Flor: ${data[0].value}%0A`;
-    mensaje += `Color: ${data[1].value}%0A`;
-    mensaje += `Cantidad: ${data[2].value}%0A`;
-    mensaje += `Papel: ${data[3].value}%0A`;
-    mensaje += `Moño: ${data[4].value}%0A`;
-
-    if (data[5].value) {
-        mensaje += `Mensaje: ${data[5].value}%0A`;
-    }
-
-    const url = "https://wa.me/18296926964?text=" + encodeURIComponent(mensaje);
-    window.open(url, "_blank");
-});
-
-/* ======================
-LILITH AI (CHAT)
-====================== */
-const abrirChat = $("#abrirChat");
-const cerrarChat = $("#cerrarChat");
-const chatBox = $("#chatBox");
-const chatMensajes = $("#chatMensajes");
-const input = $("#mensajeUsuario");
-const enviar = $("#enviarMensaje");
-
-function bot(texto) {
-
-    texto = texto.toLowerCase();
-
-    if (texto.includes("envio")) return "🚚 Sí hacemos envíos en Santo Domingo.";
-    if (texto.includes("precio")) return "💐 Tenemos ramos desde RD$900 en adelante.";
-    if (texto.includes("personal")) return "🎀 Sí, puedes personalizar tu ramo completamente.";
-    if (texto.includes("hola")) return "🌸 ¡Hola! Soy Lilith AI, ¿en qué te ayudo?";
-
-    return "💐 Escríbenos por WhatsApp al +1 (829) 692-6964 para ayudarte mejor.";
-}
-
-function addMsg(text, cls) {
-    if (!chatMensajes) return;
-
-    chatMensajes.innerHTML += `<div class="${cls}">${text}</div>`;
-    chatMensajes.scrollTop = chatMensajes.scrollHeight;
-}
-
-abrirChat?.addEventListener("click", () => chatBox?.classList.add("active"));
-cerrarChat?.addEventListener("click", () => chatBox?.classList.remove("active"));
-
-function enviarMsg() {
-    if (!input) return;
-
-    const texto = input.value.trim();
-    if (!texto) return;
-
-    addMsg(texto, "usuario");
-    addMsg(bot(texto), "bot");
-
-    input.value = "";
-}
-
-enviar?.addEventListener("click", enviarMsg);
-input?.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") enviarMsg();
-});
-
-/* ======================
-INICIALIZAR
-====================== */
 actualizarCarrito();
 
-console.log("Lilith Blooms PRO cargado 💐");
+/* ======================
+WHATSAPP PERSONALIZADO
+====================== */
+
+document.getElementById("formPersonalizar")?.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const selects = this.querySelectorAll("select");
+    const input = this.querySelector("input");
+    const textarea = this.querySelector("textarea");
+
+    let mensaje = "Hola 👋 buenas tardes.%0A%0A";
+    mensaje += "Quiero un ramo personalizado.%0A%0A";
+    mensaje += "🌸 Tipo: " + (selects[0]?.value || "") + "%0A";
+    mensaje += "🎨 Color: " + (selects[1]?.value || "") + "%0A";
+    mensaje += "💐 Cantidad: " + (input?.value || "") + "%0A";
+    mensaje += "📦 Papel: " + (selects[2]?.value || "") + "%0A";
+    mensaje += "🎀 Moño: " + (selects[3]?.value || "") + "%0A";
+
+    if(textarea?.value) {
+        mensaje += "%0A💌 Mensaje: " + textarea.value;
+    }
+
+    window.open("https://wa.me/18296926964?text=" + mensaje, "_blank");
+});
+
+/* ======================
+MÚSICA (FIX)
+====================== */
+
+const music = $("#bgMusic");
+const musicBtn = $("#musicBtn");
+
+let playing = false;
+
+musicBtn?.addEventListener("click", async () => {
+    if (!music) return;
+
+    try {
+        if (!playing) {
+            await music.play();
+            musicBtn.innerText = "⏸️ Pausar música";
+        } else {
+            music.pause();
+            musicBtn.innerText = "🎵 Modo ambiente";
+        }
+        playing = !playing;
+    } catch (e) {
+        console.log("Error música:", e);
+    }
+});
+
+/* ======================
+ANIMACIÓN ENTRADA
+====================== */
+
+window.addEventListener("load", () => {
+    document.body.style.opacity = 1;
+});
