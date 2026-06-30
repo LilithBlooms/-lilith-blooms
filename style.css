@@ -1,40 +1,34 @@
-/*======================
-RESET
-======================*/
+/* ======================
+RESET GENERAL
+====================== */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
-    scroll-behavior: smooth;
 }
 
 body {
-    background: linear-gradient(-45deg, #fff0f5, #ffe6f0, #fffafc, #fce4ec);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    cursor: auto;
+    background: #fff7fb;
+    color: #333;
 }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/*======================
+/* ======================
 HEADER
-======================*/
+====================== */
+
 .header {
     position: fixed;
     top: 0;
     width: 100%;
+    height: 70px;
+    background: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 40px;
-    background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(10px);
+    padding: 0 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
     z-index: 1000;
 }
 
@@ -45,14 +39,31 @@ HEADER
 }
 
 .logo img {
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
 }
 
-/*======================
-BOTONES HEADER
-======================*/
-.header-icons button {
+nav {
+    display: flex;
+    gap: 15px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+nav a:hover {
+    color: #e91e63;
+}
+
+/* ======================
+ICONOS HEADER
+====================== */
+
+#carrito {
     background: none;
     border: none;
     font-size: 18px;
@@ -60,171 +71,251 @@ BOTONES HEADER
     position: relative;
 }
 
-/*======================
+#carrito span {
+    background: #e91e63;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    position: absolute;
+    top: -8px;
+    right: -10px;
+}
+
+/* ======================
 HERO
-======================*/
+====================== */
+
 .hero {
     height: 100vh;
-    background: url("img/hero.jpg") center/cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    position: relative;
+    background: linear-gradient(135deg,#ffe6f2,#fff);
+    padding-top: 70px;
 }
 
-.hero-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.4);
-}
-
-.hero-content {
-    position: relative;
-    color: white;
-    max-width: 700px;
-}
-
-/*======================
+/* ======================
 PRODUCTOS
-======================*/
+====================== */
+
 .productos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 40px;
 }
 
 .producto {
-    background: rgba(255,255,255,0.7);
+    background: white;
     border-radius: 15px;
     padding: 15px;
-    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     transition: 0.3s;
+    position: relative;
 }
 
 .producto:hover {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
 }
 
 .producto img {
     width: 100%;
-    border-radius: 15px;
+    border-radius: 12px;
 }
 
-.producto button {
-    margin-top: 10px;
+.producto h3 {
+    margin: 10px 0;
+}
+
+.producto p {
+    color: #e91e63;
+    font-weight: bold;
+}
+
+.btn-agregar {
     width: 100%;
     padding: 10px;
-    border: none;
     background: #e91e63;
     color: white;
+    border: none;
     border-radius: 10px;
     cursor: pointer;
 }
 
-/*======================
-CARRITO
-======================*/
-.carrito-lateral {
+/* ======================
+CARRITO LATERAL
+====================== */
+
+#carritoLateral {
     position: fixed;
     top: 0;
     right: -400px;
     width: 350px;
     height: 100%;
     background: white;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    padding: 20px;
     transition: 0.3s;
     z-index: 2000;
-    padding: 20px;
 }
 
-.carrito-lateral.active {
+#carritoLateral.active {
     right: 0;
 }
 
-.carrito-header {
-    display: flex;
-    justify-content: space-between;
+.carrito-items {
+    margin-top: 20px;
+    max-height: 70%;
+    overflow-y: auto;
 }
 
-/*======================
+#total {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #e91e63;
+}
+
+/* ======================
 OVERLAY
-======================*/
-.overlay {
+====================== */
+
+#overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.4);
     opacity: 0;
     visibility: hidden;
     transition: 0.3s;
     z-index: 1500;
 }
 
-.overlay.active {
+#overlay.active {
     opacity: 1;
     visibility: visible;
 }
 
-/*======================
-CHAT AI
-======================*/
-.chat-boton {
-    position: fixed;
-    bottom: 90px;
-    right: 20px;
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    background: #e91e63;
-    color: white;
-    font-size: 28px;
-    border: none;
-    z-index: 9999;
+/* ======================
+FORM PERSONALIZAR
+====================== */
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    margin: auto;
 }
 
-.chat-box {
-    display: none;
-    position: fixed;
-    bottom: 160px;
-    right: 20px;
-    width: 320px;
-    height: 450px;
-    background: white;
-    border-radius: 20px;
-    z-index: 9999;
+input, select, textarea {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
 }
 
-/*======================
+button {
+    cursor: pointer;
+}
+
+/* ======================
 MÚSICA BOTÓN
-======================*/
+====================== */
+
 .music-btn {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 9999;
-    background: rgba(255,255,255,0.9);
+    background: white;
     border: none;
     padding: 10px 15px;
-    border-radius: 25px;
-    cursor: pointer;
+    border-radius: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    z-index: 9999;
 }
 
-/*======================
-RESPONSIVE
-======================*/
-@media (max-width: 768px) {
-    .header {
-        padding: 10px 15px;
-    }
+/* ======================
+CHAT IA
+====================== */
 
-    nav ul {
+.chat-box {
+    display: none;
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    z-index: 9999;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.chat-box .bot,
+.chat-box .usuario {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+.bot {
+    background: #ffe6f0;
+}
+
+.usuario {
+    background: #e91e63;
+    color: white;
+}
+
+/* ======================
+CONTADORES
+====================== */
+
+.contador {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    text-align: center;
+    padding: 40px;
+}
+
+.contador h2 {
+    color: #e91e63;
+    font-size: 30px;
+}
+
+/* ======================
+OPINIONES
+====================== */
+
+.opiniones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 40px;
+}
+
+.opinion {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* ======================
+RESPONSIVE
+====================== */
+
+@media(max-width:768px){
+
+    nav {
         display: none;
     }
 
-    .hero-content h1 {
-        font-size: 30px;
+    .productos {
+        padding: 20px;
     }
 }
