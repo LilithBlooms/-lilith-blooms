@@ -67,26 +67,78 @@ document.querySelectorAll(".producto button").forEach(btn=>{
 
         actualizarCarrito();
 
+        
+ function actualizarCarrito(){
+
+    carritoItems.innerHTML="";
+
+    let total=0;
+
+    carrito.forEach((item,index)=>{
+
+        total += item.precio * item.cantidad;
+
+        carritoItems.innerHTML += `
+
+        <div style="
+        display:flex;
+        gap:12px;
+        margin:15px 0;
+        align-items:center;
+        ">
+
+            <img
+            src="${item.imagen}"
+            style="
+            width:70px;
+            height:70px;
+            object-fit:cover;
+            border-radius:12px;
+            ">
+
+            <div style="flex:1;">
+
+                <strong>${item.nombre}</strong>
+
+                <p>
+                RD$${item.precio}
+                </p>
+
+                <div>
+
+                    <button onclick="restar(${index})">−</button>
+
+                    <span style="margin:0 8px;">
+                    ${item.cantidad}
+                    </span>
+
+                    <button onclick="sumar(${index})">+</button>
+
+                </div>
+
+            </div>
+
+            <button onclick="eliminar(${index})">
+
+                🗑️
+
+            </button>
+
+        </div>
+
+        `;
+
     });
 
-});
+    carritoTotal.innerHTML=
 
-function actualizarCarrito() {
+    "Total: RD$"+total.toLocaleString();
 
-    carritoItems.innerHTML = "";
+    contadorCarrito.innerHTML=carrito.length;
 
-    let total = 0;
+}   });
 
-    carrito.forEach((item, index) => {
-
-        total += item.precio;
-
-        let div = document.createElement("div");
-
-        div.innerHTML = `
-            <p>${item.nombre}</p>
-            <p>RD$${item.precio}</p>
-            <button onclick="eliminar(${index})">X</button>
+});eliminar(${index})">X</button>
         `;
 
         carritoItems.appendChild(div);
@@ -100,7 +152,7 @@ function actualizarCarrito() {
 function eliminar(index) {
     carrito.splice(index, 1);
     actualizarCarrito();
-}
+
 
 /*======================
 CONTADORES ANIMADOS
