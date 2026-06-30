@@ -1,96 +1,120 @@
 /* ======================
-UTILIDAD SEGURA
+CARRO GLOBAL
 ====================== */
-const $ = (id) => document.getElementById(id);
+
+let carrito = [];
+
+const carritoBtn = document.getElementById("carrito");
+const carritoLateral = document.getElementById("carritoLateral");
+const overlay = document.getElementById("overlay");
+const carritoItems = document.querySelector(".carrito-items");
+const totalText = document.getElementById("total");
+const contador = carritoBtn?.querySelector("span");
 
 /* ======================
-CARRITO
+ABRIR / CERRAR CARRITO
 ====================== */
 
-let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+if (carritoBtn && carritoLateral && overlay) {
+    carritoBtn.addEventListener("click", () => {
+        carritoLateral.classList.add("active");
+        overlay.classList.add("active");
+    });
 
-const contadorCarrito = $("#carrito")?.querySelector("span");
-const carritoBtn = $("#carrito");
-const carritoLateral = $("#carritoLateral");
-const cerrarCarrito = $("#cerrarCarrito");
-const overlay = $("#overlay");
-const carritoItems = document.querySelector(".carrito-items");
-const carritoTotal = document.querySelector(".carrito-total h3");
-
-function cerrar() {
-    carritoLateral?.classList.remove("active");
-    overlay?.classList.remove("active");
+    overlay.addEventListener("click", () => {
+        carritoLateral.classList.remove("active");
+        overlay.classList.remove("active");
+    });
 }
 
-carritoBtn?.addEventListener("click", () => {
-    carritoLateral?.classList.add("active");
-    overlay?.classList.add("active");
-});
+/* ======================
+AGREGAR PRODUCTOS
+====================== */
 
-cerrarCarrito?.addEventListener("click", cerrar);
-overlay?.addEventListener("click", cerrar);
+document.querySelectorAll(".btn-agregar").forEach(btn => {
+    btn.addEventListener("click", (e) => {
 
-/* AGREGAR PRODUCTOS */
-document.querySelectorAll(".producto button").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const producto = btn.closest(".producto");
+        const producto = e.target.closest(".producto");
         if (!producto) return;
 
         const nombre = producto.querySelector("h3")?.innerText || "Producto";
-        const precio = Number(
-            (producto.querySelector("p")?.innerText || "0")
-            .replace("RD$", "")
-            .replace(",", "")
-        );
+        const precio = parseFloat(producto.querySelector("p")?.innerText) || 0;
         const imagen = producto.querySelector("img")?.src || "";
 
-        carrito.push({ nombre, precio, imagen, cantidad: 1 });
-        actualizarCarrito();
+        carrito.push({
+            nombre,
+            precio,
+            imagen,
+            cantidad: 1
+        });
+
+        renderCarrito();
     });
 });
 
-function actualizarCarrito() {
+/* ======================
+RENDER CARRITO
+====================== */
+
+function renderCarrito() {
+
     if (!carritoItems) return;
 
     carritoItems.innerHTML = "";
+
     let total = 0;
 
-    carrito.forEach((item, index) => {
+    carrito.forEach((item, i) => {
+
         total += item.precio * item.cantidad;
 
         carritoItems.innerHTML += `
-        <div style="display:flex;gap:10px;align-items:center;margin:10px 0;">
-            <img src="${item.imagen}" style="width:60px;height:60px;object-fit:cover;border-radius:10px;">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
+            <img src="${item.imagen}" style="width:50px;height:50px;border-radius:10px;object-fit:cover;">
             <div style="flex:1;">
                 <strong>${item.nombre}</strong>
                 <p>RD$${item.precio}</p>
 
                 <div>
-                    <button onclick="restar(${index})">-</button>
+                    <button onclick="restar(${i})">-</button>
                     <span>${item.cantidad}</span>
-                    <button onclick="sumar(${index})">+</button>
+                    <button onclick="sumar(${i})">+</button>
                 </div>
             </div>
 
-            <button onclick="eliminar(${index})">🗑️</button>
-        </div>`;
+            <button onclick="eliminar(${i})">🗑</button>
+        </div>
+        `;
     });
 
-    if (carritoTotal) carritoTotal.innerText = "Total: RD$" + total.toLocaleString();
-    if (contadorCarrito) contadorCarrito.innerText = carrito.length;
+    if (totalText) {
+        totalText.innerText = "Total: RD$" + total.toLocaleString();
+    }
 
-    localStorage.setItem("carrito", JSON.stringify(carrito));
+    if (contador) {
+        contador.innerText = carrito.length;
+    }
 }
 
-function eliminar(i){ carrito.splice(i,1); actualizarCarrito(); }
-function sumar(i){ carrito[i].cantidad++; actualizarCarrito(); }
-function restar(i){
+/* ======================
+FUNCIONES CARRITO
+====================== */
+
+window.eliminar = function(i){
+    carrito.splice(i,1);
+    renderCarrito();
+};
+
+window.sumar = function(i){
+    carrito[i].cantidad++;
+    renderCarrito();
+};
+
+window.restar = function(i){
     carrito[i].cantidad--;
-    if(carrito[i].cantidad<=0) carrito.splice(i,1);
-    actualizarCarrito();
-}
-
-actualizarCarrito();
+    if (carrito[i].cantidad <= 0) carrito.splice(i,1);
+    renderCarrito();
+};
 
 /* ======================
 WHATSAPP PERSONALIZADO
@@ -99,55 +123,137 @@ WHATSAPP PERSONALIZADO
 document.getElementById("formPersonalizar")?.addEventListener("submit", function(e){
     e.preventDefault();
 
-    const selects = this.querySelectorAll("select");
-    const input = this.querySelector("input");
-    const textarea = this.querySelector("textarea");
+    const data = new FormData(this);
+    const values = [...this.querySelectorAll("select, input, textarea")];
 
-    let mensaje = "Hola 👋 buenas tardes.%0A%0A";
-    mensaje += "Quiero un ramo personalizado.%0A%0A";
-    mensaje += "🌸 Tipo: " + (selects[0]?.value || "") + "%0A";
-    mensaje += "🎨 Color: " + (selects[1]?.value || "") + "%0A";
-    mensaje += "💐 Cantidad: " + (input?.value || "") + "%0A";
-    mensaje += "📦 Papel: " + (selects[2]?.value || "") + "%0A";
-    mensaje += "🎀 Moño: " + (selects[3]?.value || "") + "%0A";
+    let mensaje = `Hola 👋 quiero un ramo personalizado:%0A`;
 
-    if(textarea?.value) {
-        mensaje += "%0A💌 Mensaje: " + textarea.value;
-    }
+    values.forEach(el => {
+        if (el.type !== "submit") {
+            mensaje += `${el.name || "Dato"}: ${el.value}%0A`;
+        }
+    });
 
     window.open("https://wa.me/18296926964?text=" + mensaje, "_blank");
 });
 
 /* ======================
-MÚSICA (FIX)
+MÚSICA
 ====================== */
 
-const music = $("#bgMusic");
-const musicBtn = $("#musicBtn");
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
 
 let playing = false;
 
-musicBtn?.addEventListener("click", async () => {
+musicBtn?.addEventListener("click", () => {
+
     if (!music) return;
 
-    try {
-        if (!playing) {
-            await music.play();
-            musicBtn.innerText = "⏸️ Pausar música";
-        } else {
-            music.pause();
-            musicBtn.innerText = "🎵 Modo ambiente";
-        }
-        playing = !playing;
-    } catch (e) {
-        console.log("Error música:", e);
+    if (!playing) {
+        music.play();
+        musicBtn.innerText = "⏸ Pausar música";
+        playing = true;
+    } else {
+        music.pause();
+        musicBtn.innerText = "🎵 Música";
+        playing = false;
     }
 });
 
 /* ======================
-ANIMACIÓN ENTRADA
+CHAT IA SIMPLE
 ====================== */
 
-window.addEventListener("load", () => {
-    document.body.style.opacity = 1;
+const abrirChat = document.getElementById("abrirChat");
+const chatBox = document.getElementById("chatBox");
+const cerrarChat = document.getElementById("cerrarChat");
+const mensajes = document.getElementById("chatMensajes");
+const inputChat = document.getElementById("mensajeUsuario");
+const enviarChat = document.getElementById("enviarMensaje");
+
+abrirChat?.addEventListener("click", () => {
+    chatBox.style.display = "block";
 });
+
+cerrarChat?.addEventListener("click", () => {
+    chatBox.style.display = "none";
+});
+
+function respuestaIA(texto){
+
+    if (texto.includes("envío")) return "Sí, hacemos envíos 🚚";
+    if (texto.includes("precio")) return "Los precios varían según el ramo 💐";
+    if (texto.includes("whatsapp")) return "Nuestro WhatsApp es 829-692-6964 📱";
+
+    return "Te puedo ayudar con envíos, precios o pedidos 💖";
+}
+
+enviarChat?.addEventListener("click", () => {
+
+    const texto = inputChat.value.trim();
+    if (!texto) return;
+
+    mensajes.innerHTML += `<div class="usuario">${texto}</div>`;
+
+    setTimeout(() => {
+        mensajes.innerHTML += `<div class="bot">${respuestaIA(texto.toLowerCase())}</div>`;
+    }, 400);
+
+    inputChat.value = "";
+});
+
+/* ======================
+CONTADORES
+====================== */
+
+function contar(id, max, speed = 20) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    let i = 0;
+
+    const interval = setInterval(() => {
+        i++;
+        el.innerText = i;
+        if (i >= max) clearInterval(interval);
+    }, speed);
+}
+
+window.addEventListener("load", () => {
+    contar("clientes", 1200, 2);
+    contar("ventas", 850, 3);
+    contar("envios", 640, 3);
+    contar("calificacion", 5, 400);
+});
+
+/* ======================
+RESEÑAS AUTOMÁTICAS
+====================== */
+
+const opiniones = [
+    ["Quedó precioso 💐", "Ashley"],
+    ["Entrega rápida y hermoso", "Daniela"],
+    ["Volveré a comprar", "Camila"]
+];
+
+const grid = document.querySelector(".opiniones-grid");
+
+function cargarOpiniones(){
+
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    opiniones.forEach(op => {
+        grid.innerHTML += `
+            <div class="opinion">
+                ★★★★★
+                <p>${op[0]}</p>
+                <h4>- ${op[1]}</h4>
+            </div>
+        `;
+    });
+}
+
+window.addEventListener("load", cargarOpiniones);
