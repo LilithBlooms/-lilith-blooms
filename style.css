@@ -10,6 +10,7 @@ body {
     background: linear-gradient(-45deg, #fff0f5, #ffe6f0, #fffafc, #fce4ec);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
+    cursor: url('https://cur.cursors-4u.net/nature/nat-10/nat976.cur'), auto;
 }
 
 @keyframes gradientBG {
@@ -263,6 +264,11 @@ PRODUCTOS
 
 .producto button:hover {
     background: #c2185b;
+}
+.producto:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    transition: 0.3s;
 }
 
 .bestseller {
@@ -1112,9 +1118,38 @@ FAVORITOS
     transform: scale(1.05);
     background: white;
 }
+.producto, .card-coleccion, .opinion {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s forwards;
+}
 
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
+button {
+    position: relative;
+    overflow: hidden;
+}
 
+button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: 0.5s;
+}
+
+button:hover::after {
+    left: 100%;
+}
 
 
 
