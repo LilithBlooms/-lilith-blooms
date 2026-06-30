@@ -280,3 +280,84 @@ document.querySelectorAll(".pregunta").forEach(btn=>{
     }
 
 });
+
+/*======================
+CONSTRUCTOR DE RAMOS
+======================*/
+
+const flor = document.getElementById("flor");
+const color = document.getElementById("color");
+const cantidad = document.getElementById("cantidad");
+const papel = document.getElementById("papel");
+const mono = document.getElementById("mono");
+const peluche = document.getElementById("peluche");
+const tarjeta = document.getElementById("tarjeta");
+
+const resFlor = document.getElementById("resFlor");
+const resColor = document.getElementById("resColor");
+const resCantidad = document.getElementById("resCantidad");
+const resPapel = document.getElementById("resPapel");
+const resMono = document.getElementById("resMono");
+const extras = document.getElementById("extras");
+
+const precioFinal = document.getElementById("precioFinal");
+
+function actualizarConstructor(){
+
+    let precio = Number(cantidad.value) * 80;
+
+    let listaExtras = [];
+
+    if(peluche.checked){
+        precio += 350;
+        listaExtras.push("🧸 Peluche");
+    }
+
+    if(tarjeta.checked){
+        precio += 100;
+        listaExtras.push("💌 Tarjeta");
+    }
+
+    resFlor.innerHTML = "🌸 Flor: " + flor.value;
+    resColor.innerHTML = "🎨 Color: " + color.value;
+    resCantidad.innerHTML = "💐 Cantidad: " + cantidad.value;
+    resPapel.innerHTML = "📦 Papel: " + papel.value;
+    resMono.innerHTML = "🎀 Moño: " + mono.value;
+
+    if(listaExtras.length > 0){
+        extras.innerHTML = "✨ Extras: " + listaExtras.join(", ");
+    }else{
+        extras.innerHTML = "✨ Extras: Ninguno";
+    }
+
+    precioFinal.innerHTML = "RD$ " + precio.toLocaleString();
+
+}
+
+[
+    flor,
+    color,
+    cantidad,
+    papel,
+    mono,
+    peluche,
+    tarjeta
+].forEach(item=>{
+
+    item.addEventListener("change",actualizarConstructor);
+
+});
+
+actualizarConstructor();
+
+/*======================
+AGREGAR AL CARRITO
+======================*/
+
+document
+.getElementById("agregarPersonalizado")
+.addEventListener("click",()=>{
+
+    alert("🌸 ¡Tu ramo personalizado fue agregado al carrito!");
+
+});
