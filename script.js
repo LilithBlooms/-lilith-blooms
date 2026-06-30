@@ -459,3 +459,38 @@ function crearCorazon() {
 }
 
 setInterval(crearCorazon, 1200);
+
+
+function crearEfectoAesthetic() {
+
+    const items = ["❤", "✨", "💖", "🌸"];
+
+    const el = document.createElement("div");
+
+    el.className = "floating-item";
+    el.innerText = items[Math.floor(Math.random() * items.length)];
+
+    // posición aleatoria
+    el.style.left = Math.random() * window.innerWidth + "px";
+
+    // tamaño random suave
+    const size = 12 + Math.random() * 18;
+    el.style.fontSize = size + "px";
+
+    // colores aesthetic suaves
+    const colors = ["#ff4d88", "#ff85c1", "#ffd1dc", "#ffffff", "#ffb6c1"];
+    el.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+    // duración random (para que no sea repetitivo)
+    el.style.animationDuration = (4 + Math.random() * 3) + "s";
+
+    document.body.appendChild(el);
+
+    setTimeout(() => {
+        el.remove();
+    }, 7000);
+}
+
+// ritmo suave (no saturado)
+setInterval(crearEfectoAesthetic, 800);
+
