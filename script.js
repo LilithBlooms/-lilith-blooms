@@ -1,16 +1,105 @@
 
 /*======================
-CARRO Y FUNCIONES BASE
+CARRITO LIMPIO Y FUNCIONAL
 ======================*/
 
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-let contadorCarrito = document.querySelector("#carrito span");
-let carritoBtn = document.getElementById("carrito");
-let carritoLateral = document.getElementById("carritoLateral");
-let cerrarCarrito = document.getElementById("cerrarCarrito");
-let overlay = document.getElementById("overlay");
-let carritoItems = document.querySelector(".carrito-items");
-let carritoTotal = document.querySelector(".carrito-total h3");
+
+const contadorCarrito = document.querySelector("#carrito span");
+const carritoBtn = document.getElementById("carrito");
+const carritoLateral = document.getElementById("carritoLateral");
+const cerrarCarrito = document.getElementById("cerrarCarrito");
+const overlay = document.getElementById("overlay");
+const carritoItems = document.querySelector(".carrito-items");
+const carritoTotal = document.querySelector(".carrito-total h3");
+
+/* abrir/cerrar */
+carritoBtn.onclick = () => {
+    carritoLateral.classList.add("active");
+    overlay.classList.add("active");
+};
+
+cerrarCarrito.onclick = cerrar;
+overlay.onclick = cerrar;
+
+function cerrar() {
+    carritoLateral.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+/* agregar productos */
+document.querySelectorAll(".producto button").forEach(btn => {
+    btn.onclick = () => {
+        const producto = btn.closest(".producto");
+
+        const nombre = producto.querySelector("h3").innerText;
+
+        const precio = Number(
+            producto.querySelector("p").innerText.replace("RD$", "").replace(",", "")
+        );
+
+        const imagen = producto.querySelector("img").src;
+
+        carrito.push({ nombre, precio, imagen, cantidad: 1 });
+
+        actualizarCarrito();
+    };
+});
+
+function actualizarCarrito() {
+
+    carritoItems.innerHTML = "";
+
+    let total = 0;
+
+    carrito.forEach((item, index) => {
+
+        total += item.precio * item.cantidad;
+
+        carritoItems.innerHTML += `
+            <div style="display:flex;gap:10px;align-items:center;margin:10px 0;">
+                <img src="${item.imagen}" style="width:60px;height:60px;object-fit:cover;border-radius:10px;">
+                <div style="flex:1;">
+                    <strong>${item.nombre}</strong>
+                    <p>RD$${item.precio}</p>
+
+                    <div>
+                        <button onclick="restar(${index})">-</button>
+                        <span>${item.cantidad}</span>
+                        <button onclick="sumar(${index})">+</button>
+                    </div>
+                </div>
+
+                <button onclick="eliminar(${index})">🗑️</button>
+            </div>
+        `;
+    });
+
+    carritoTotal.innerText = "Total: RD$" + total.toLocaleString();
+    contadorCarrito.innerText = carrito.length;
+
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+}
+
+function eliminar(i) {
+    carrito.splice(i, 1);
+    actualizarCarrito();
+}
+
+function sumar(i) {
+    carrito[i].cantidad++;
+    actualizarCarrito();
+}
+
+function restar(i) {
+    carrito[i].cantidad--;
+    if (carrito[i].cantidad <= 0) carrito.splice(i, 1);
+    actualizarCarrito();
+}
+
+actualizarCarrito();
+
+
 
 /*======================
 ABRIR / CERRAR CARRITO
