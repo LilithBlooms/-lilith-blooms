@@ -1150,6 +1150,18 @@ button::after {
 button:hover::after {
     left: 100%;
 }
+/* BOTONES FLOTANTES AESTHETIC FIX */
+#musicBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+}
 
-
+.chat-boton {
+    position: fixed;
+    bottom: 90px; /* 👈 lo subimos para que no choque */
+    right: 20px;
+    z-index: 9999;
+}
 
