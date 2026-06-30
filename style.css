@@ -786,21 +786,19 @@ LILITH AI
     transform:scale(1.08);
 }
 
-.chat-box{
-    position:fixed;
-    bottom:100px;
-    right:25px;
-    width:340px;
-    max-width:90%;
-    height:520px;
-    background:white;
-    border-radius:20px;
-    overflow:hidden;
-    display:none;
-    flex-direction:column;
-    box-shadow:0 15px 40px rgba(0,0,0,.18);
-    z-index:5000;
+.chat-box {
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 320px;
+    height: 450px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 9999;
 }
+
 
 .chat-header{
     background:#e91e63;
@@ -1150,6 +1148,7 @@ button::after {
 button:hover::after {
     left: 100%;
 }
+
 /* BOTONES FLOTANTES AESTHETIC FIX */
 #musicBtn {
     position: fixed;
