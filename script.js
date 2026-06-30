@@ -1,68 +1,50 @@
 /*======================
-CARRITO LIMPIO Y FUNCIONAL
+CARRO Y FUNCIONES BASE
 ======================*/
 
-let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+let carrito = [];
+let contadorCarrito = document.querySelector("#carrito span");
+let carritoBtn = document.getElementById("carrito");
+let carritoLateral = document.getElementById("carritoLateral");
+let cerrarCarrito = document.getElementById("cerrarCarrito");
+let overlay = document.getElementById("overlay");
+let carritoItems = document.querySelector(".carrito-items");
+let carritoTotal = document.querySelector(".carrito-total h3");
 
-const contadorCarrito = document.querySelector("#carrito span");
-const carritoBtn = document.getElementById("carrito");
-const carritoLateral = document.getElementById("carritoLateral");
-const cerrarCarrito = document.getElementById("cerrarCarrito");
-const overlay = document.getElementById("overlay");
-const carritoItems = document.querySelector(".carrito-items");
-const carritoTotal = document.querySelector(".carrito-total h3");
-
-/* ======================
+/*======================
 ABRIR / CERRAR CARRITO
-====================== */
+======================*/
 
-function cerrar() {
+carritoBtn.addEventListener("click", () => {
+    carritoLateral.classList.add("active");
+    overlay.classList.add("active");
+});
+
+cerrarCarrito.addEventListener("click", () => {
     carritoLateral.classList.remove("active");
     overlay.classList.remove("active");
-}
+});
 
-if (carritoBtn) {
-    carritoBtn.onclick = () => {
-        carritoLateral.classList.add("active");
-        overlay.classList.add("active");
-    };
-}
+overlay.addEventListener("click", () => {
+    carritoLateral.classList.remove("active");
+    overlay.classList.remove("active");
+});
 
-if (cerrarCarrito) cerrarCarrito.onclick = cerrar;
-if (overlay) overlay.onclick = cerrar;
+/*======================
+AGREGAR AL CARRITO
+======================*/
 
-/* ======================
-AGREGAR PRODUCTOS
-====================== */
+document.querySelectorAll(".agregar").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        let producto = e.target.parentElement;
+        let nombre = producto.querySelector("h3").innerText;
+        let precio = parseInt(producto.querySelector("p").innerText.replace("RD$", ""));
 
-document.querySelectorAll(".producto button").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const producto = btn.closest(".producto");
-
-        const nombre = producto.querySelector("h3").innerText;
-
-        const precio = Number(
-            producto.querySelector("p").innerText
-                .replace("RD$", "")
-                .replace(",", "")
-        );
-
-        const imagen = producto.querySelector("img").src;
-
-        carrito.push({
-            nombre,
-            precio,
-            imagen,
-            cantidad: 1
-        });
+        carrito.push({ nombre, precio });
 
         actualizarCarrito();
     });
 });
-
-/* ======================
-ACTUALIZAR CARRITO
-====================== */
 
 function actualizarCarrito() {
 
@@ -72,203 +54,114 @@ function actualizarCarrito() {
 
     carrito.forEach((item, index) => {
 
-        total += item.precio * item.cantidad;
+        total += item.precio;
 
-        carritoItems.innerHTML += `
-            <div style="display:flex;gap:10px;align-items:center;margin:10px 0;">
-                <img src="${item.imagen}" style="width:60px;height:60px;object-fit:cover;border-radius:10px;">
-                <div style="flex:1;">
-                    <strong>${item.nombre}</strong>
-                    <p>RD$${item.precio}</p>
+        let div = document.createElement("div");
 
-                    <div>
-                        <button onclick="restar(${index})">-</button>
-                        <span>${item.cantidad}</span>
-                        <button onclick="sumar(${index})">+</button>
-                    </div>
-                </div>
-
-                <button onclick="eliminar(${index})">🗑️</button>
-            </div>
+        div.innerHTML = `
+            <p>${item.nombre}</p>
+            <p>RD$${item.precio}</p>
+            <button onclick="eliminar(${index})">X</button>
         `;
+
+        carritoItems.appendChild(div);
+
     });
 
-    carritoTotal.innerText = "Total: RD$" + total.toLocaleString();
+    carritoTotal.innerText = "Total: RD$" + total;
     contadorCarrito.innerText = carrito.length;
-
-    localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
-/* ======================
-FUNCIONES
-====================== */
-
-function eliminar(i) {
-    carrito.splice(i, 1);
+function eliminar(index) {
+    carrito.splice(index, 1);
     actualizarCarrito();
 }
 
-function sumar(i) {
-    carrito[i].cantidad++;
-    actualizarCarrito();
-}
+/*======================
+CONTADORES ANIMADOS
+======================*/
 
-function restar(i) {
-    carrito[i].cantidad--;
-    if (carrito[i].cantidad <= 0) carrito.splice(i, 1);
-    actualizarCarrito();
-}
+let ejecutado = false;
 
-/* ======================
-INICIALIZAR
-====================== */
+window.addEventListener("scroll", () => {
 
-actualizarCarrito();
+    let contenedor = document.querySelector(".contador");
 
-document.getElementById("formPersonalizar").addEventListener("submit", function(e){
-    e.preventDefault();
-    
+    if (!ejecutado && contenedor.getBoundingClientRect().top < window.innerHeight) {
 
-    let flor = this.querySelectorAll("select")[0].value;
-    let color = this.querySelectorAll("select")[1].value;
-    let cantidad = this.querySelector("input").value;
-    let papel = this.querySelectorAll("select")[2].value;
-    let mono = this.querySelectorAll("select")[3].value;
-    let mensajeExtra = this.querySelector("textarea").value;
+        ejecutarContadores();
+        ejecutado = true;
 
-    let mensaje = "Hola 👋 buenas tardes.%0A%0A";
-    mensaje += "Quiero hacer un ramo personalizado de limpiapipas.%0A%0A";
-    mensaje += "🌸 Flor: " + flor + "%0A";
-    mensaje += "🎨 Color: " + color + "%0A";
-    mensaje += "💐 Cantidad: " + cantidad + "%0A";
-    mensaje += "📦 Papel: " + papel + "%0A";
-    mensaje += "🎀 Moño: " + mono + "%0A";
-
-    if(mensajeExtra !== ""){
-        mensaje += "%0A💌 Mensaje: " + mensajeExtra + "%0A";
     }
 
-    let url = "https://wa.me/18296926964?text=" + mensaje;
+});
+
+function ejecutarContadores() {
+
+    animar("#clientes", 1500);
+    animar("#ventas", 800);
+    animar("#envios", 1000);
+    animar("#calificacion", 4.9, true);
+
+}
+
+function animar(id, valor, decimal = false) {
+
+    let elemento = document.querySelector(id);
+    let inicio = 0;
+
+    let intervalo = setInterval(() => {
+
+        inicio += decimal ? 0.1 : 10;
+
+        if (inicio >= valor) {
+            inicio = valor;
+            clearInterval(intervalo);
+        }
+
+        elemento.innerText = decimal ? inicio.toFixed(1) : Math.floor(inicio);
+
+    }, 20);
+
+}
+
+/*======================
+FAQ ACORDEÓN
+======================*/
+
+document.querySelectorAll(".faq-item button").forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+        let contenido = btn.nextElementSibling;
+
+        contenido.style.display =
+            contenido.style.display === "block" ? "none" : "block";
+
+    });
+
+});
+
+/*======================
+WHATSAPP CHECKOUT
+======================*/
+
+document.querySelector(".carrito-total button").addEventListener("click", () => {
+
+    let mensaje = "Hola, quiero este pedido:%0A";
+
+    carrito.forEach(item => {
+        mensaje += `- ${item.nombre} RD$${item.precio}%0A`;
+    });
+
+    let url = `https://wa.me/18296926964?text=${mensaje}`;
 
     window.open(url, "_blank");
+
 });
-const music = document.getElementById("bgMusic");
-const musicBtn = document.getElementById("musicBtn");
 
-let playing = false;
+/*======================
+INICIALIZACIÓN
+======================*/
 
-if (musicBtn && music && music.play) {
-    musicBtn.addEventListener("click", async () => {
-        try {
-            if (!playing) {
-                await music.play();
-                musicBtn.innerText = "⏸️ Pausar música";
-                playing = true;
-            } else {
-                music.pause();
-                musicBtn.innerText = "🎵 Modo ambiente";
-                playing = false;
-            }
-        } catch (e) {
-            console.log("El navegador bloqueó el audio hasta interacción.");
-        }
-    });
-}
-});
-document.body.style.opacity = 0;
-
-window.addEventListener("load", () => {
-    document.body.style.transition = "1s ease";
-    document.body.style.opacity = 1;
-});
-const abrirChat = document.getElementById("abrirChat");
-const cerrarChat = document.getElementById("cerrarChat");
-const chatBox = document.getElementById("chatBox");
-const chatMensajes = document.getElementById("chatMensajes");
-const mensajeUsuario = document.getElementById("mensajeUsuario");
-const enviarMensaje = document.getElementById("enviarMensaje");
-
-if (abrirChat && chatBox) {
-    abrirChat.onclick = () => chatBox.style.display = "flex";
-}
-
-if (cerrarChat && chatBox) {
-    cerrarChat.onclick = () => chatBox.style.display = "none";
-}
-
-function agregarMensaje(texto, clase) {
-    if (!chatMensajes) return;
-
-    chatMensajes.innerHTML += `
-        <div class="${clase}">${texto}</div>
-    `;
-
-    chatMensajes.scrollTop = chatMensajes.scrollHeight;
-}
-
-function responder(texto) {
-    texto = texto.toLowerCase();
-
-    if (texto.includes("envio")) return "🚚 Sí, hacemos envíos.";
-    if (texto.includes("precio")) return "💐 Tenemos diferentes precios según el ramo.";
-    if (texto.includes("hola")) return "🌸 ¡Hola! ¿Cómo te ayudo?";
-
-    return "🌸 Escríbenos por WhatsApp para más info.";
-}
-
-function enviar() {
-    if (!mensajeUsuario) return;
-
-    let texto = mensajeUsuario.value.trim();
-    if (!texto) return;
-
-    agregarMensaje(texto, "usuario");
-
-    setTimeout(() => {
-        agregarMensaje(responder(texto), "bot");
-    }, 500);
-
-    mensajeUsuario.value = "";
-}
-
-if (enviarMensaje) enviarMensaje.onclick = enviar;
-
-if (mensajeUsuario) {
-    mensajeUsuario.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") enviar();
-    });
-}
-
-const music = document.getElementById("bgMusic");
-const musicBtn = document.getElementById("musicBtn");
-
-if (music && musicBtn) {
-
-    let playing = false;
-
-    musicBtn.addEventListener("click", () => {
-
-        if (!playing) {
-            music.play();
-            musicBtn.innerText = "⏸️ Pausar música";
-            playing = true;
-        } else {
-            music.pause();
-            musicBtn.innerText = "🎵 Modo ambiente";
-            playing = false;
-        }
-
-    });
-    
-
-}
-const abrirChat = document.getElementById("abrirChat");
-const cerrarChat = document.getElementById("cerrarChat");
-const chatBox = document.getElementById("chatBox");
-
-if (abrirChat && cerrarChat && chatBox) {
-
-    abrirChat.onclick = () => chatBox.style.display = "flex";
-    cerrarChat.onclick = () => chatBox.style.display = "none";
-
-}
+console.log("Lilith Bloms cargado correctamente 💐");
