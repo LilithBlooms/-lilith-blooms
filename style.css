@@ -225,14 +225,11 @@ PRODUCTOS
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 25px;
 }
-
 .producto {
-    background: white;
-    border-radius: 20px;
-    padding: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    position: relative;
-    transition: 0.3s;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
 }
 
 .producto:hover {
