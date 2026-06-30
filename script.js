@@ -127,6 +127,7 @@ actualizarCarrito();
 
 document.getElementById("formPersonalizar").addEventListener("submit", function(e){
     e.preventDefault();
+    
 
     let flor = this.querySelectorAll("select")[0].value;
     let color = this.querySelectorAll("select")[1].value;
@@ -156,18 +157,23 @@ const musicBtn = document.getElementById("musicBtn");
 
 let playing = false;
 
-musicBtn.addEventListener("click", () => {
-
-    if (!playing) {
-        music.play();
-        musicBtn.innerText = "⏸️ Pausar música";
-        playing = true;
-    } else {
-        music.pause();
-        musicBtn.innerText = "🎵 Modo ambiente";
-        playing = false;
-    }
-
+if (musicBtn && music && music.play) {
+    musicBtn.addEventListener("click", async () => {
+        try {
+            if (!playing) {
+                await music.play();
+                musicBtn.innerText = "⏸️ Pausar música";
+                playing = true;
+            } else {
+                music.pause();
+                musicBtn.innerText = "🎵 Modo ambiente";
+                playing = false;
+            }
+        } catch (e) {
+            console.log("El navegador bloqueó el audio hasta interacción.");
+        }
+    });
+}
 });
 document.body.style.opacity = 0;
 
@@ -175,5 +181,61 @@ window.addEventListener("load", () => {
     document.body.style.transition = "1s ease";
     document.body.style.opacity = 1;
 });
+const abrirChat = document.getElementById("abrirChat");
+const cerrarChat = document.getElementById("cerrarChat");
+const chatBox = document.getElementById("chatBox");
+const chatMensajes = document.getElementById("chatMensajes");
+const mensajeUsuario = document.getElementById("mensajeUsuario");
+const enviarMensaje = document.getElementById("enviarMensaje");
 
+if (abrirChat && chatBox) {
+    abrirChat.onclick = () => chatBox.style.display = "flex";
+}
+
+if (cerrarChat && chatBox) {
+    cerrarChat.onclick = () => chatBox.style.display = "none";
+}
+
+function agregarMensaje(texto, clase) {
+    if (!chatMensajes) return;
+
+    chatMensajes.innerHTML += `
+        <div class="${clase}">${texto}</div>
+    `;
+
+    chatMensajes.scrollTop = chatMensajes.scrollHeight;
+}
+
+function responder(texto) {
+    texto = texto.toLowerCase();
+
+    if (texto.includes("envio")) return "🚚 Sí, hacemos envíos.";
+    if (texto.includes("precio")) return "💐 Tenemos diferentes precios según el ramo.";
+    if (texto.includes("hola")) return "🌸 ¡Hola! ¿Cómo te ayudo?";
+
+    return "🌸 Escríbenos por WhatsApp para más info.";
+}
+
+function enviar() {
+    if (!mensajeUsuario) return;
+
+    let texto = mensajeUsuario.value.trim();
+    if (!texto) return;
+
+    agregarMensaje(texto, "usuario");
+
+    setTimeout(() => {
+        agregarMensaje(responder(texto), "bot");
+    }, 500);
+
+    mensajeUsuario.value = "";
+}
+
+if (enviarMensaje) enviarMensaje.onclick = enviar;
+
+if (mensajeUsuario) {
+    mensajeUsuario.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") enviar();
+    });
+}
 
