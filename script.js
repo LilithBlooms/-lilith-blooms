@@ -1,259 +1,201 @@
-/* ======================
-CARRO GLOBAL
-====================== */
+// Estado global del carrito
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-let carrito = [];
-
+// Elementos del carrito
+const contadorCarrito = document.querySelector("#carrito span");
 const carritoBtn = document.getElementById("carrito");
 const carritoLateral = document.getElementById("carritoLateral");
+const cerrarCarrito = document.getElementById("cerrarCarrito");
 const overlay = document.getElementById("overlay");
 const carritoItems = document.querySelector(".carrito-items");
-const totalText = document.getElementById("total");
-const contador = carritoBtn?.querySelector("span");
+const carritoTotal = document.querySelector(".carrito-total h3");
 
-/* ======================
-ABRIR / CERRAR CARRITO
-====================== */
+// Abrir/Cerrar carrito
+function cerrarCarritoFn() {
+    carritoLateral.classList.remove("active");
+    overlay.classList.remove("active");
+}
 
-if (carritoBtn && carritoLateral && overlay) {
+if (carritoBtn) {
     carritoBtn.addEventListener("click", () => {
         carritoLateral.classList.add("active");
         overlay.classList.add("active");
     });
-
-    overlay.addEventListener("click", () => {
-        carritoLateral.classList.remove("active");
-        overlay.classList.remove("active");
-    });
 }
 
-/* ======================
-AGREGAR PRODUCTOS
-====================== */
+if (cerrarCarrito) cerrarCarrito.addEventListener("click", cerrarCarritoFn);
+if (overlay) overlay.addEventListener("click", cerrarCarritoFn);
 
-document.querySelectorAll(".btn-agregar").forEach(btn => {
-    btn.addEventListener("click", (e) => {
+// Agregar productos al carrito
+document.querySelectorAll(".producto button").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const producto = btn.closest(".producto");
+        const nombre = producto.querySelector("h3").innerText;
+        const precio = Number(producto.querySelector("p").innerText.replace("RD$", "").replace(",", ""));
+        const imagen = producto.querySelector("img").src;
 
-        const producto = e.target.closest(".producto");
-        if (!producto) return;
+        // Verificar si ya existe el producto en el carrito
+        const existe = carrito.find(item => item.nombre === nombre);
+        if (existe) {
+            existe.cantidad++;
+        } else {
+            carrito.push({
+                nombre,
+                precio,
+                imagen,
+                cantidad: 1
+            });
+        }
 
-        const nombre = producto.querySelector("h3")?.innerText || "Producto";
-        const precio = parseFloat(producto.querySelector("p")?.innerText) || 0;
-        const imagen = producto.querySelector("img")?.src || "";
-
-        carrito.push({
-            nombre,
-            precio,
-            imagen,
-            cantidad: 1
-        });
-
-        renderCarrito();
+        actualizarCarrito();
     });
 });
 
-/* ======================
-RENDER CARRITO
-====================== */
-
-function renderCarrito() {
-
-    if (!carritoItems) return;
-
+// Actualizar carrito en el DOM
+function actualizarCarrito() {
     carritoItems.innerHTML = "";
-
     let total = 0;
 
-    carrito.forEach((item, i) => {
-
+    carrito.forEach((item, index) => {
         total += item.precio * item.cantidad;
-
         carritoItems.innerHTML += `
-        <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
-            <img src="${item.imagen}" style="width:50px;height:50px;border-radius:10px;object-fit:cover;">
-            <div style="flex:1;">
-                <strong>${item.nombre}</strong>
-                <p>RD$${item.precio}</p>
-
-                <div>
-                    <button onclick="restar(${i})">-</button>
-                    <span>${item.cantidad}</span>
-                    <button onclick="sumar(${i})">+</button>
+            <div class="item-carrito" style="display:flex;gap:10px;align-items:center;margin:10px 0;">
+                <img src="${item.imagen}" style="width:60px;height:60px;object-fit:cover;border-radius:10px;">
+                <div style="flex:1;">
+                    <strong>${item.nombre}</strong>
+                    <p>RD$${item.precio}</p>
+                    <div>
+                        <button onclick="restar(${index})">-</button>
+                        <span>${item.cantidad}</span>
+                        <button onclick="sumar(${index})">+</button>
+                    </div>
                 </div>
+                <button onclick="eliminar(${index})">🗑️</button>
             </div>
-
-            <button onclick="eliminar(${i})">🗑</button>
-        </div>
         `;
     });
 
-    if (totalText) {
-        totalText.innerText = "Total: RD$" + total.toLocaleString();
-    }
+    carritoTotal.innerText = "Total: RD$" + total.toLocaleString();
+    contadorCarrito.innerText = carrito.length;
 
-    if (contador) {
-        contador.innerText = carrito.length;
-    }
+    localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
-/* ======================
-FUNCIONES CARRITO
-====================== */
+// Funciones para modificar el carrito
+function eliminar(index) {
+    carrito.splice(index, 1);
+    actualizarCarrito();
+}
 
-window.eliminar = function(i){
-    carrito.splice(i,1);
-    renderCarrito();
-};
+function sumar(index) {
+    carrito[index].cantidad++;
+    actualizarCarrito();
+}
 
-window.sumar = function(i){
-    carrito[i].cantidad++;
-    renderCarrito();
-};
+function restar(index) {
+    carrito[index].cantidad--;
+    if (carrito[index].cantidad <= 0) {
+        carrito.splice(index, 1);
+    }
+    actualizarCarrito();
+}
 
-window.restar = function(i){
-    carrito[i].cantidad--;
-    if (carrito[i].cantidad <= 0) carrito.splice(i,1);
-    renderCarrito();
-};
+// Inicializar carrito
+actualizarCarrito();
 
-/* ======================
-WHATSAPP PERSONALIZADO
-====================== */
-
-document.getElementById("formPersonalizar")?.addEventListener("submit", function(e){
+// Envío de formulario personalizado por WhatsApp
+document.getElementById("formPersonalizar")?.addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const data = new FormData(this);
-    const values = [...this.querySelectorAll("select, input, textarea")];
+    let selects = this.querySelectorAll("select");
+    let flor = selects[0].value;
+    let color = selects[1].value;
+    let cantidad = this.querySelector("input").value;
+    let papel = selects[2].value;
+    let mono = selects[3].value;
+    let mensajeExtra = this.querySelector("textarea").value;
 
-    let mensaje = `Hola 👋 quiero un ramo personalizado:%0A`;
+    let mensaje = `Hola 👋 quiero un ramo personalizado:%0A
+🌸 Flor: ${flor}%0A
+🎨 Color: ${color}%0A
+💐 Cantidad: ${cantidad}%0A
+📦 Papel: ${papel}%0A
+🎀 Moño: ${mono}%0A`;
 
-    values.forEach(el => {
-        if (el.type !== "submit") {
-            mensaje += `${el.name || "Dato"}: ${el.value}%0A`;
-        }
-    });
+    if (mensajeExtra) {
+        mensaje += `%0A💌 Mensaje: ${mensajeExtra}`;
+    }
 
-    window.open("https://wa.me/18296926964?text=" + mensaje, "_blank");
+    window.open(
+        "https://wa.me/18296926964?text=" + mensaje,
+        "_blank"
+    );
 });
 
-/* ======================
-MÚSICA
-====================== */
-
+// Música ambiente
 const music = document.getElementById("bgMusic");
 const musicBtn = document.getElementById("musicBtn");
-
 let playing = false;
 
-musicBtn?.addEventListener("click", () => {
-
-    if (!music) return;
-
-    if (!playing) {
-        music.play();
-        musicBtn.innerText = "⏸ Pausar música";
-        playing = true;
-    } else {
-        music.pause();
-        musicBtn.innerText = "🎵 Música";
-        playing = false;
+musicBtn?.addEventListener("click", async () => {
+    try {
+        if (!playing) {
+            await music.play();
+            musicBtn.innerText = "⏸️ Pausar música";
+            playing = true;
+        } else {
+            music.pause();
+            musicBtn.innerText = "🎵 Modo ambiente";
+            playing = false;
+        }
+    } catch (e) {
+        console.log("El navegador bloqueó el audio hasta interacción.");
     }
 });
 
-/* ======================
-CHAT IA SIMPLE
-====================== */
-
+// Chat IA simple
 const abrirChat = document.getElementById("abrirChat");
-const chatBox = document.getElementById("chatBox");
 const cerrarChat = document.getElementById("cerrarChat");
-const mensajes = document.getElementById("chatMensajes");
-const inputChat = document.getElementById("mensajeUsuario");
-const enviarChat = document.getElementById("enviarMensaje");
+const chatBox = document.getElementById("chatBox");
+const chatMensajes = document.getElementById("chatMensajes");
+const input = document.getElementById("mensajeUsuario");
+const enviar = document.getElementById("enviarMensaje");
 
-abrirChat?.addEventListener("click", () => {
-    chatBox.style.display = "block";
-});
+abrirChat?.addEventListener("click", () => chatBox.style.display = "flex");
+cerrarChat?.addEventListener("click", () => chatBox.style.display = "none");
 
-cerrarChat?.addEventListener("click", () => {
-    chatBox.style.display = "none";
-});
-
-function respuestaIA(texto){
-
-    if (texto.includes("envío")) return "Sí, hacemos envíos 🚚";
-    if (texto.includes("precio")) return "Los precios varían según el ramo 💐";
-    if (texto.includes("whatsapp")) return "Nuestro WhatsApp es 829-692-6964 📱";
-
-    return "Te puedo ayudar con envíos, precios o pedidos 💖";
+function agregarMensaje(texto, clase) {
+    chatMensajes.innerHTML += `<div class="${clase}">${texto}</div>`;
+    chatMensajes.scrollTop = chatMensajes.scrollHeight;
 }
 
-enviarChat?.addEventListener("click", () => {
+function responder(texto) {
+    texto = texto.toLowerCase();
+    if (texto.includes("envío")) return "🚚 Sí, hacemos envíos en RD.";
+    if (texto.includes("precio")) return "💐 Tenemos diferentes precios según el ramo.";
+    if (texto.includes("hola")) return "🌸 ¡Hola! ¿En qué te puedo ayudar?";
+    return "🌸 Escríbenos por WhatsApp para más info.";
+}
 
-    const texto = inputChat.value.trim();
+function enviarMensaje() {
+    let texto = input.value.trim();
     if (!texto) return;
 
-    mensajes.innerHTML += `<div class="usuario">${texto}</div>`;
+    agregarMensaje(texto, "usuario");
 
     setTimeout(() => {
-        mensajes.innerHTML += `<div class="bot">${respuestaIA(texto.toLowerCase())}</div>`;
-    }, 400);
+        agregarMensaje(responder(texto), "bot");
+    }, 500);
 
-    inputChat.value = "";
-});
-
-/* ======================
-CONTADORES
-====================== */
-
-function contar(id, max, speed = 20) {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    let i = 0;
-
-    const interval = setInterval(() => {
-        i++;
-        el.innerText = i;
-        if (i >= max) clearInterval(interval);
-    }, speed);
+    input.value = "";
 }
 
+enviar?.addEventListener("click", enviarMensaje);
+input?.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") enviarMensaje();
+});
+
+// Fade in al cargar
 window.addEventListener("load", () => {
-    contar("clientes", 1200, 2);
-    contar("ventas", 850, 3);
-    contar("envios", 640, 3);
-    contar("calificacion", 5, 400);
+    document.body.style.opacity = "1";
 });
-
-/* ======================
-RESEÑAS AUTOMÁTICAS
-====================== */
-
-const opiniones = [
-    ["Quedó precioso 💐", "Ashley"],
-    ["Entrega rápida y hermoso", "Daniela"],
-    ["Volveré a comprar", "Camila"]
-];
-
-const grid = document.querySelector(".opiniones-grid");
-
-function cargarOpiniones(){
-
-    if (!grid) return;
-
-    grid.innerHTML = "";
-
-    opiniones.forEach(op => {
-        grid.innerHTML += `
-            <div class="opinion">
-                ★★★★★
-                <p>${op[0]}</p>
-                <h4>- ${op[1]}</h4>
-            </div>
-        `;
-    });
-}
-
-window.addEventListener("load", cargarOpiniones);
