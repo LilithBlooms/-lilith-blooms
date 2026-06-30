@@ -605,3 +605,231 @@ function toast(texto){
     },2500);
 
 }
+/*====================================================
+                CHECKOUT WHATSAPP
+====================================================*/
+
+function activarCheckout(){
+
+    const boton = document.querySelector(".carrito-total button");
+
+    if(!boton) return;
+
+    boton.addEventListener("click",enviarWhatsApp);
+
+}
+
+function enviarWhatsApp(){
+
+    if(carrito.length===0){
+
+        toast("🛒 Tu carrito está vacío");
+
+        return;
+
+    }
+
+    let mensaje="🌸 *Hola, quiero realizar este pedido*%0A%0A";
+
+    let total=0;
+
+    carrito.forEach(producto=>{
+
+        const subtotal=
+            producto.precio*producto.cantidad;
+
+        total+=subtotal;
+
+        mensaje+=
+`• ${producto.nombre}
+Cantidad: ${producto.cantidad}
+Precio: RD$${producto.precio}
+Subtotal: RD$${subtotal}
+
+`;
+
+    });
+
+    mensaje+="------------------------%0A";
+
+    mensaje+=`💰 Total: RD$${total}%0A%0A`;
+
+    mensaje+="Gracias 🌸";
+
+    window.open(
+
+        `https://wa.me/18296926964?text=${encodeURIComponent(mensaje)}`,
+
+        "_blank"
+
+    );
+
+}
+
+/*====================================================
+                VACIAR CARRITO
+====================================================*/
+
+function vaciarCarrito(){
+
+    if(carrito.length===0){
+
+        toast("El carrito ya está vacío.");
+
+        return;
+
+    }
+
+    if(confirm("¿Vaciar todo el carrito?")){
+
+        carrito=[];
+
+        guardarCarrito();
+
+        actualizarCarrito();
+
+        toast("🗑 Carrito vaciado");
+
+    }
+
+}
+
+/*====================================================
+            BOTÓN VACIAR CARRITO
+====================================================*/
+
+const botonVaciar=document.createElement("button");
+
+botonVaciar.innerText="Vaciar carrito";
+
+botonVaciar.className="vaciar-carrito";
+
+document.querySelector(".carrito-total")
+.appendChild(botonVaciar);
+
+botonVaciar.onclick=vaciarCarrito;
+
+
+/*====================================================
+                CONTADORES
+====================================================*/
+
+let contadoresEjecutados=false;
+
+function activarContadores(){
+
+    window.addEventListener("scroll",()=>{
+
+        if(contadoresEjecutados) return;
+
+        const seccion=document.querySelector(".contador");
+
+        if(!seccion) return;
+
+        if(seccion.getBoundingClientRect().top<window.innerHeight-100){
+
+            contadoresEjecutados=true;
+
+            animarNumero("#clientes",1500);
+
+            animarNumero("#ventas",800);
+
+            animarNumero("#envios",1000);
+
+            animarDecimal("#calificacion",4.9);
+
+        }
+
+    });
+
+}
+
+function animarNumero(id,valor){
+
+    let numero=0;
+
+    const elemento=document.querySelector(id);
+
+    const velocidad=Math.max(1,Math.floor(valor/100));
+
+    const intervalo=setInterval(()=>{
+
+        numero+=velocidad;
+
+        if(numero>=valor){
+
+            numero=valor;
+
+            clearInterval(intervalo);
+
+        }
+
+        elemento.innerText=numero;
+
+    },20);
+
+}
+
+function animarDecimal(id,valor){
+
+    let numero=0;
+
+    const elemento=document.querySelector(id);
+
+    const intervalo=setInterval(()=>{
+
+        numero+=0.1;
+
+        if(numero>=valor){
+
+            numero=valor;
+
+            clearInterval(intervalo);
+
+        }
+
+        elemento.innerText=numero.toFixed(1);
+
+    },40);
+
+}
+
+/*====================================================
+                FAQ
+====================================================*/
+
+function activarFAQ(){
+
+    document.querySelectorAll(".faq-item").forEach(item=>{
+
+        const boton=item.querySelector("button");
+
+        const contenido=item.querySelector("div");
+
+        contenido.style.maxHeight="0px";
+
+        contenido.style.overflow="hidden";
+
+        contenido.style.transition="0.35s";
+
+        boton.onclick=()=>{
+
+            if(contenido.style.maxHeight==="0px"){
+
+                contenido.style.maxHeight=
+
+                    contenido.scrollHeight+"px";
+
+            }else{
+
+                contenido.style.maxHeight="0px";
+
+            }
+
+        };
+
+    });
+
+}
+
+console.log("🌸 Lilith Bloms PRO cargado correctamente.");
