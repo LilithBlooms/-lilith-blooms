@@ -888,6 +888,155 @@ LILITH AI
 .chat-input button:hover{
     background:#c2185b;
 }
+/*======================
+CONSTRUCTOR DE RAMOS
+======================*/
+
+.constructor{
+    padding:100px 40px;
+    background:#fff8fc;
+}
+
+.constructor h2{
+    text-align:center;
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.constructor p{
+    text-align:center;
+    color:#777;
+    margin-bottom:40px;
+}
+
+.constructor-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    max-width:1200px;
+    margin:auto;
+}
+
+.opciones,
+.preview{
+
+    background:white;
+    padding:30px;
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+.opciones label{
+
+    display:block;
+    margin-top:18px;
+    margin-bottom:8px;
+    font-weight:600;
+
+}
+
+.opciones select,
+.opciones input[type="number"]{
+
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid #ddd;
+    font-size:15px;
+
+}
+
+.opciones input[type="checkbox"]{
+
+    margin-right:8px;
+
+}
+
+.preview{
+
+    text-align:center;
+
+}
+
+.ramo-preview{
+
+    width:220px;
+    height:220px;
+    margin:20px auto;
+    border-radius:50%;
+    background:linear-gradient(135deg,#ffe6f2,#fff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:90px;
+    box-shadow:0 15px 35px rgba(233,30,99,.15);
+
+    animation:flotar 3s ease-in-out infinite;
+
+}
+
+@keyframes flotar{
+
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+    100%{transform:translateY(0);}
+
+}
+
+.resumen{
+
+    margin-top:20px;
+    text-align:left;
+
+}
+
+.resumen p{
+
+    margin:8px 0;
+    color:#444;
+
+}
+
+#precioFinal{
+
+    margin-top:25px;
+    color:#e91e63;
+    font-size:38px;
+
+}
+
+#agregarPersonalizado{
+
+    margin-top:20px;
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:15px;
+    background:#e91e63;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:.3s;
+
+}
+
+#agregarPersonalizado:hover{
+
+    transform:translateY(-3px);
+    box-shadow:0 12px 30px rgba(233,30,99,.3);
+
+}
+
+@media(max-width:900px){
+
+    .constructor-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
 
 
 
