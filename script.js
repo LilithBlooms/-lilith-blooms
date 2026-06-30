@@ -35,16 +35,40 @@ overlay.addEventListener("click", () => {
 AGREGAR AL CARRITO
 ======================*/
 
-document.querySelectorAll(".agregar").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-        let producto = e.target.parentElement;
-        let nombre = producto.querySelector("h3").innerText;
-        let precio = parseInt(producto.querySelector("p").innerText.replace("RD$", ""));
+/*======================
+AGREGAR PRODUCTOS AL CARRITO
+======================*/
 
-        carrito.push({ nombre, precio });
+document.querySelectorAll(".producto button").forEach(btn=>{
+
+    btn.addEventListener("click",()=>{
+
+        const producto = btn.closest(".producto");
+
+        const nombre = producto.querySelector("h3").innerText;
+
+        const precio = Number(
+            producto.querySelector("p")
+            .innerText
+            .replace("RD$","")
+            .replace(",","")
+        );
+
+        const imagen = producto.querySelector("img").src;
+
+        carrito.push({
+
+            nombre,
+            precio,
+            imagen,
+            cantidad:1
+
+        });
 
         actualizarCarrito();
+
     });
+
 });
 
 function actualizarCarrito() {
