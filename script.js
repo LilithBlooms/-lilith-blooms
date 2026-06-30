@@ -153,7 +153,27 @@ function eliminar(index) {
     carrito.splice(index, 1);
     actualizarCarrito();
 
+function sumar(index){
 
+    carrito[index].cantidad++;
+
+    actualizarCarrito();
+
+}
+
+function restar(index){
+
+    carrito[index].cantidad--;
+
+    if(carrito[index].cantidad<=0){
+
+        carrito.splice(index,1);
+
+    }
+
+    actualizarCarrito();
+
+}
 /*======================
 CONTADORES ANIMADOS
 ======================*/
