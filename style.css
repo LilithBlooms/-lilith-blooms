@@ -1037,6 +1037,54 @@ CONSTRUCTOR DE RAMOS
     }
 
 }
+/*======================
+FAVORITOS
+======================*/
+
+.producto{
+
+    overflow:hidden;
+
+}
+
+.favorito-btn{
+
+    position:absolute;
+    top:15px;
+    right:15px;
+
+    width:42px;
+    height:42px;
+
+    border:none;
+    border-radius:50%;
+
+    background:white;
+
+    cursor:pointer;
+
+    font-size:20px;
+
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+
+    transition:.3s;
+
+}
+
+.favorito-btn:hover{
+
+    transform:scale(1.12);
+
+}
+
+.favorito-btn.activo{
+
+    background:#e91e63;
+
+    color:white;
+
+}
+
 
 
 
