@@ -166,3 +166,117 @@ INICIALIZACIÓN
 ======================*/
 
 console.log("Lilith Bloms cargado correctamente 💐");
+
+/*======================
+LILITH AI
+======================*/
+
+const abrirChat = document.getElementById("abrirChat");
+const cerrarChat = document.getElementById("cerrarChat");
+const chatBox = document.getElementById("chatBox");
+const chatMensajes = document.getElementById("chatMensajes");
+const mensajeUsuario = document.getElementById("mensajeUsuario");
+const enviarMensaje = document.getElementById("enviarMensaje");
+
+abrirChat.onclick = () => {
+    chatBox.style.display = "flex";
+}
+
+cerrarChat.onclick = () => {
+    chatBox.style.display = "none";
+}
+
+function responder(texto){
+
+    texto = texto.toLowerCase();
+
+    if(texto.includes("envio") || texto.includes("envíos")){
+        return "🚚 Sí. Realizamos envíos. Escríbenos por WhatsApp para confirmar disponibilidad según tu ubicación.";
+    }
+
+    if(texto.includes("personal")){
+        return "🎀 ¡Claro! Personalizamos colores, flores, papel, moños y mensajes para que tu ramo sea único.";
+    }
+
+    if(texto.includes("whatsapp") || texto.includes("telefono") || texto.includes("número")){
+        return "📱 Puedes escribirnos al +1 (829) 692-6964.";
+    }
+
+    if(texto.includes("precio") || texto.includes("cuesta") || texto.includes("vale")){
+        return "💐 Tenemos ramos para diferentes presupuestos. Escríbenos por WhatsApp y te enviaremos el catálogo actualizado.";
+    }
+
+    if(texto.includes("tarda") || texto.includes("tiempo")){
+        return "⏰ Normalmente los pedidos se entregan entre 24 y 48 horas, dependiendo del nivel de personalización.";
+    }
+
+    if(texto.includes("pago")){
+        return "💳 Aceptamos varios métodos de pago. Contáctanos para indicarte las opciones disponibles.";
+    }
+
+    if(texto.includes("color")){
+        return "🌈 Tenemos una gran variedad de colores de limpiapipas para personalizar tu ramo.";
+    }
+
+    if(texto.includes("hola")){
+        return "🌸 ¡Hola! Bienvenido(a) a Lilith Bloms. ¿Cómo puedo ayudarte hoy?";
+    }
+
+    return "🌸 No encontré una respuesta para esa pregunta. Escríbenos por WhatsApp al +1 (829) 692-6964 y con gusto te ayudaremos.";
+}
+
+function agregarMensaje(texto, clase){
+
+    chatMensajes.innerHTML += `
+        <div class="${clase}">
+            ${texto}
+        </div>
+    `;
+
+    chatMensajes.scrollTop = chatMensajes.scrollHeight;
+
+}
+
+function enviar(){
+
+    let texto = mensajeUsuario.value.trim();
+
+    if(texto == "") return;
+
+    agregarMensaje(texto,"usuario");
+
+    let respuesta = responder(texto);
+
+    setTimeout(()=>{
+        agregarMensaje(respuesta,"bot");
+    },600);
+
+    mensajeUsuario.value="";
+
+}
+
+enviarMensaje.onclick = enviar;
+
+mensajeUsuario.addEventListener("keypress",function(e){
+
+    if(e.key==="Enter"){
+        enviar();
+    }
+
+});
+
+document.querySelectorAll(".pregunta").forEach(btn=>{
+
+    btn.onclick=()=>{
+
+        agregarMensaje(btn.innerText,"usuario");
+
+        let respuesta=responder(btn.innerText);
+
+        setTimeout(()=>{
+            agregarMensaje(respuesta,"bot");
+        },500);
+
+    }
+
+});
