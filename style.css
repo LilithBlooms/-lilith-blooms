@@ -971,3 +971,29 @@ IA CHAT
         opacity: 0;
     }
 }
+
+.floating-item {
+    position: fixed;
+    bottom: -30px;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.85;
+    animation: floatUp linear forwards;
+    filter: drop-shadow(0 0 6px rgba(255,105,180,0.4));
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-110vh) scale(0.4) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Opcional: suaviza toda la web un poquito aesthetic */
+body {
+    letter-spacing: 0.2px;
+}
