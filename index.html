@@ -5,15 +5,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Lilie Blooms | Flores de Limpiapipas</title>
+<title>Lilie Blooms</title>
 
 <link rel="stylesheet" href="style.css">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
@@ -21,15 +17,13 @@
 <body>
 
 <!-- ======================
-MÚSICA (ARREGLADO)
+MÚSICA
 ====================== -->
 <audio id="bgMusic" loop>
     <source src="music/ambiente.mp3" type="audio/mp3">
 </audio>
 
-<button id="musicBtn" class="music-btn">
-    🎵 Modo ambiente
-</button>
+<button id="musicBtn" class="music-btn">🎵 Música</button>
 
 <!-- ======================
 HEADER
@@ -37,32 +31,20 @@ HEADER
 <header class="header">
 
 <div class="logo">
-    <img src="IMG_3096.jpeg" class="logo-icon">
-    <h1>Lilie <span>Blooms</span></h1>
+    <img src="IMG_3096.jpeg">
+    <h1>Lilie Blooms</h1>
 </div>
 
 <nav>
-<ul>
-<li><a href="#inicio">Inicio</a></li>
-<li><a href="#colecciones">Colecciones</a></li>
-<li><a href="#productos">Productos</a></li>
-<li><a href="#personalizar">Personalizar</a></li>
-<li><a href="#galeria">Galería</a></li>
-<li><a href="#opiniones">Opiniones</a></li>
-<li><a href="#contacto">Contacto</a></li>
-</ul>
+    <a href="#inicio">Inicio</a>
+    <a href="#productos">Productos</a>
+    <a href="#personalizar">Personalizar</a>
 </nav>
 
 <div class="header-icons">
 
-<button id="favoritos">
-<i class="fa-solid fa-heart"></i>
-<span>0</span>
-</button>
-
 <button id="carrito">
-<i class="fa-solid fa-cart-shopping"></i>
-<span>0</span>
+🛒 <span>0</span>
 </button>
 
 </div>
@@ -72,68 +54,32 @@ HEADER
 <!-- ======================
 HERO
 ====================== -->
-<section class="hero" id="inicio">
-<div class="hero-overlay"></div>
-
-<div class="hero-content">
-<h4>Flores hechas con amor</h4>
-<h1>Cada flor cuenta una historia.</h1>
-<p>Flores artesanales de limpiapipas personalizadas.</p>
-
-<div class="hero-buttons">
-<a href="#productos" class="btnPrincipal">Comprar ahora</a>
-<a href="#colecciones" class="btnSecundario">Ver catálogo</a>
-</div>
-</div>
+<section id="inicio" class="hero">
+<h1>Flores de limpiapipas</h1>
+<p>Hechas a mano con amor</p>
 </section>
 
 <!-- ======================
-COLECCIONES
+PRODUCTOS
 ====================== -->
-<section class="colecciones" id="colecciones">
+<section id="productos">
 
-<h2>Nuestras Colecciones</h2>
-<p>Diseñadas para cada momento especial.</p>
-
-<div class="grid-colecciones">
-
-<div class="card-coleccion">🌹 <h3>Rosas</h3></div>
-<div class="card-coleccion">🌻 <h3>Girasoles</h3></div>
-<div class="card-coleccion">🌷 <h3>Tulipanes</h3></div>
-<div class="card-coleccion">💐 <h3>Personalizados</h3></div>
-
-</div>
-
-</section>
-
-<!-- ======================
-PRODUCTOS (ARREGLADO BOTÓN)
-====================== -->
-<section class="destacados" id="productos">
-
-<h2>Productos Destacados</h2>
+<h2>Productos</h2>
 
 <div class="productos">
 
 <div class="producto">
 <img src="IMG_3041.jpeg">
 <h3>Sol Eterno</h3>
-<p>RD$1,250</p>
-<button class="agregar-carrito">Agregar al carrito</button>
+<p>1250</p>
+<button class="btn-agregar">Agregar</button>
 </div>
 
 <div class="producto">
 <img src="IMG_3063.jpeg">
 <h3>Sueño Rosado</h3>
-<p>RD$990</p>
-<button class="agregar-carrito">Agregar al carrito</button>
-</div>
-
-<div class="producto">
-<img src="IMG_3070.jpeg">
-<h3>Dulzura en Rosa</h3>
-<p>RD$1,100</p>
-<button class="agregar-carrito">Agregar al carrito</button>
+<p>990</p>
+<button class="btn-agregar">Agregar</button>
 </div>
 
 </div>
@@ -141,67 +87,41 @@ PRODUCTOS (ARREGLADO BOTÓN)
 </section>
 
 <!-- ======================
-CONSTRUCTOR (ARREGLADO IDS)
+PERSONALIZAR
 ====================== -->
-<section class="constructor" id="constructor">
-
-<h2>🌸 Diseña tu ramo</h2>
-
-<div class="constructor-grid">
-
-<div class="opciones">
-
-<label>Tipo de flor</label>
-<select id="florPersonalizada"></select>
-
-<label>Color</label>
-<select id="colorPersonalizado"></select>
-
-<label>Cantidad</label>
-<input type="number" id="cantidadPersonalizada" value="10">
-
-<label>Papel</label>
-<select id="papelPersonalizado"></select>
-
-<label>Moño</label>
-<select id="monoPersonalizado"></select>
-
-</div>
-
-<div class="preview">
-
-<h3>Vista previa</h3>
-
-<div class="ramo-preview">💐</div>
-
-<h2 id="precioFinal">RD$0</h2>
-
-<button id="agregarPersonalizado">Agregar al carrito</button>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ======================
-PERSONALIZAR FORM
-====================== -->
-<section class="personalizar" id="personalizar">
+<section id="personalizar">
 
 <h2>Personaliza tu ramo</h2>
 
 <form id="formPersonalizar">
 
-<select id="p_flor"></select>
-<select id="p_color"></select>
-<input type="number" id="p_cantidad">
-<select id="p_papel"></select>
-<select id="p_mono"></select>
+<select id="flor">
+<option>Rosas</option>
+<option>Tulipanes</option>
+<option>Girasoles</option>
+</select>
 
-<textarea id="p_mensaje"></textarea>
+<select id="color">
+<option>Rojo</option>
+<option>Rosa</option>
+<option>Blanco</option>
+</select>
 
-<button type="submit">Solicitar ramo</button>
+<input id="cantidad" type="number" value="1" min="1">
+
+<select id="papel">
+<option>Negro</option>
+<option>Blanco</option>
+</select>
+
+<select id="moño">
+<option>Dorado</option>
+<option>Rosa</option>
+</select>
+
+<textarea id="mensaje" placeholder="Mensaje opcional"></textarea>
+
+<button type="submit">Enviar por WhatsApp</button>
 
 </form>
 
@@ -210,48 +130,38 @@ PERSONALIZAR FORM
 <!-- ======================
 CARRITO
 ====================== -->
-<div class="carrito-lateral" id="carritoLateral">
+<div id="carritoLateral" class="carrito">
 
-<div class="carrito-header">
-<h3>Tu carrito</h3>
-<button id="cerrarCarrito">✖</button>
-</div>
+<h3>Carrito</h3>
 
 <div class="carrito-items"></div>
 
-<div class="carrito-total">
-<h3>Total: RD$0</h3>
+<h4 id="total">Total: 0</h4>
 
-<button>
-Pagar por WhatsApp
-</button>
+<button>Pagar</button>
 
 </div>
 
-</div>
-
-<div class="overlay" id="overlay"></div>
+<div id="overlay"></div>
 
 <!-- ======================
-CHAT IA (ARREGLADO OK)
+CHAT IA
 ====================== -->
-<div class="lilie-ai">
+<div class="chat">
 
-<button id="abrirChat" class="chat-boton">🌸</button>
+<button id="abrirChat">🌸</button>
 
-<div class="chat-box" id="chatBox">
+<div id="chatBox" class="chat-box">
 
-<div class="chat-header">
-<h3>🌸 Lilie AI</h3>
-<button id="cerrarChat">✕</button>
+<div>
+<h3>Lilie AI</h3>
+<button id="cerrarChat">X</button>
 </div>
 
-<div class="chat-mensajes" id="chatMensajes"></div>
+<div id="mensajes"></div>
 
-<div class="chat-input">
-<input id="mensajeUsuario" placeholder="Escribe...">
-<button id="enviarMensaje">Enviar</button>
-</div>
+<input id="inputChat">
+<button id="enviarChat">Enviar</button>
 
 </div>
 
