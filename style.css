@@ -1084,6 +1084,11 @@ FAVORITOS
     color:white;
 
 }
+/* ===== OCULTAR CORAZÓN FLOTANTE SIN ROMPER BOTONES ===== */
+
+.producto .favorito-btn {
+    display: none !important;
+}
 
 
 
