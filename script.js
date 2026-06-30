@@ -458,3 +458,60 @@ document
     alert("🌸 ¡Tu ramo personalizado fue agregado al carrito!");
 
 });
+
+/*======================
+FAVORITOS
+======================*/
+
+let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+
+const contadorFavoritos =
+document.querySelector("#favoritos span");
+
+function actualizarFavoritos(){
+
+    contadorFavoritos.innerHTML = favoritos.length;
+
+    localStorage.setItem(
+
+        "favoritos",
+
+        JSON.stringify(favoritos)
+
+    );
+
+}
+
+document.querySelectorAll(".favorito-btn").forEach(btn=>{
+
+    btn.onclick=()=>{
+
+        const producto = btn.closest(".producto");
+
+        const nombre = producto.querySelector("h3").innerText;
+
+        if(favoritos.includes(nombre)){
+
+            favoritos = favoritos.filter(item=>item!==nombre);
+
+            btn.classList.remove("activo");
+
+            btn.innerHTML="🤍";
+
+        }else{
+
+            favoritos.push(nombre);
+
+            btn.classList.add("activo");
+
+            btn.innerHTML="❤️";
+
+        }
+
+        actualizarFavoritos();
+
+    }
+
+});
+
+actualizarFavoritos();
