@@ -1,25 +1,27 @@
 /*====================================================
-                LILITH BLOMS PRO v2.0
-        Sistema profesional de tienda online
+                LILITH BLOMS PRO FINAL
 ====================================================*/
-
-/*==============================
-      VARIABLES GLOBALES
-==============================*/
 
 const STORAGE_CARRITO = "lb_carrito";
 const STORAGE_FAVORITOS = "lb_favoritos";
 const STORAGE_TEMA = "lb_tema";
 
+/*==============================
+        ESTADO GLOBAL
+==============================*/
+
 let carrito = JSON.parse(localStorage.getItem(STORAGE_CARRITO)) || [];
 let favoritos = JSON.parse(localStorage.getItem(STORAGE_FAVORITOS)) || [];
+
+/*==============================
+        ELEMENTOS
+==============================*/
 
 const carritoBtn = document.getElementById("carrito");
 const favoritosBtn = document.getElementById("favoritos");
 
 const carritoLateral = document.getElementById("carritoLateral");
 const cerrarCarrito = document.getElementById("cerrarCarrito");
-
 const overlay = document.getElementById("overlay");
 
 const carritoItems = document.querySelector(".carrito-items");
@@ -29,72 +31,71 @@ const contadorCarrito = document.querySelector("#carrito span");
 const contadorFavoritos = document.querySelector("#favoritos span");
 
 /*==============================
-        INICIALIZACIÓN
+        INICIO
 ==============================*/
 
 document.addEventListener("DOMContentLoaded", () => {
 
     cargarTema();
-
-    actualizarCarrito();
-
-    actualizarFavoritos();
-
-    activarBotonesProductos();
-
-    activarModoOscuro();
-
+    renderCarrito();
+    renderFavoritos();
+    activarProductos();
+    activarUI();
     activarFAQ();
-
     activarContadores();
-
-    activarCheckout();
-
 });
 
 /*==============================
-      ABRIR CARRITO
+        UI GENERAL
 ==============================*/
 
-carritoBtn.addEventListener("click", () => {
+function activarUI(){
 
-    carritoLateral.classList.add("active");
+    carritoBtn.onclick = abrirCarrito;
+    cerrarCarrito.onclick = cerrarCarritoFn;
+    overlay.onclick = cerrarCarritoFn;
 
-    overlay.classList.add("active");
-
-});
-
-/*==============================
-      CERRAR CARRITO
-==============================*/
-
-cerrarCarrito.addEventListener("click", cerrarPanel);
-
-overlay.addEventListener("click", cerrarPanel);
-
-function cerrarPanel(){
-
-    carritoLateral.classList.remove("active");
-
-    overlay.classList.remove("active");
-
+    document.getElementById("modoOscuro").onclick = toggleTema;
 }
 
 /*==============================
-      ACTIVAR PRODUCTOS
+        CARRITO
 ==============================*/
 
-function activarBotonesProductos(){
+function activarProductos(){
 
-    document.querySelectorAll(".producto").forEach(producto=>{
+    document.querySelectorAll(".producto button").forEach(btn => {
 
-        const boton = producto.querySelector("button");
+        btn.addEventListener("click", () => {
 
-        if(!boton) return;
+            const producto = btn.closest(".producto");
 
-        boton.addEventListener("click",()=>{
+            const nombre = producto.querySelector("h3").innerText;
 
-            agregarProducto(producto);
+            const precio = parseInt(
+                producto.querySelector("p").innerText
+                .replace("RD$", "")
+                .replace(",", "")
+            );
+
+            const imagen = producto.querySelector("img").src;
+
+            const existe = carrito.find(p => p.nombre === nombre);
+
+            if (existe) {
+                existe.cantidad++;
+            } else {
+                carrito.push({
+                    nombre,
+                    precio,
+                    imagen,
+                    cantidad: 1
+                });
+            }
+
+            save();
+            renderCarrito();
+            toast("🛒 Agregado al carrito");
 
         });
 
@@ -102,729 +103,229 @@ function activarBotonesProductos(){
 
 }
 
-/*==============================
-      AGREGAR PRODUCTO
-==============================*/
-
-function agregarProducto(producto){
-
-    const nombre =
-        producto.querySelector("h3").innerText;
-
-    const precio =
-        Number(
-            producto.querySelector("p")
-            .innerText
-            .replace("RD$","")
-            .replace(",","")
-            .trim()
-        );
-
-    const imagen =
-        producto.querySelector("img").src;
-
-    const existente =
-        carrito.find(item=>item.nombre===nombre);
-
-    if(existente){
-
-        existente.cantidad++;
-
-    }else{
-
-        carrito.push({
-
-            nombre,
-
-            precio,
-
-            imagen,
-
-            cantidad:1
-
-        });
-
-    }
-
-    guardarCarrito();
-
-    actualizarCarrito();
-
-    toast("🛒 Producto agregado");
-
-}
-
-/*==============================
-      GUARDAR
-==============================*/
-
-function guardarCarrito(){
-
-    localStorage.setItem(
-
-        STORAGE_CARRITO,
-
-        JSON.stringify(carrito)
-
-    );
-
-}
-/*==============================
-      ACTUALIZAR CARRITO
-==============================*/
-
-function actualizarCarrito(){
+function renderCarrito(){
 
     carritoItems.innerHTML = "";
 
     let total = 0;
-    let cantidadTotal = 0;
+    let count = 0;
 
-    if(carrito.length === 0){
-
-        carritoItems.innerHTML = `
-            <div class="carrito-vacio">
-                <h3>🛒</h3>
-                <p>Tu carrito está vacío.</p>
-            </div>
-        `;
-
-        carritoTotal.innerHTML = "Total: RD$0";
+    if (carrito.length === 0) {
+        carritoItems.innerHTML = "<p>Tu carrito está vacío</p>";
+        carritoTotal.innerText = "Total: RD$0";
         contadorCarrito.innerText = "0";
-
         return;
     }
 
-    carrito.forEach((producto,index)=>{
+    carrito.forEach((p, i) => {
 
-        const subtotal =
-            producto.precio * producto.cantidad;
-
+        const subtotal = p.precio * p.cantidad;
         total += subtotal;
+        count += p.cantidad;
 
-        cantidadTotal += producto.cantidad;
+        const div = document.createElement("div");
 
-        const card = document.createElement("div");
+        div.innerHTML = `
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+                <img src="${p.imagen}" width="50" style="border-radius:10px">
 
-        card.className = "item-carrito";
+                <div style="flex:1">
+                    <strong>${p.nombre}</strong>
+                    <p>RD$${p.precio}</p>
 
-        card.innerHTML = `
+                    <div>
+                        <button onclick="menos(${i})">-</button>
+                        ${p.cantidad}
+                        <button onclick="mas(${i})">+</button>
+                    </div>
 
-            <img src="${producto.imagen}" alt="${producto.nombre}">
-
-            <div class="item-info">
-
-                <h4>${producto.nombre}</h4>
-
-                <p>RD$${producto.precio}</p>
-
-                <div class="cantidad">
-
-                    <button class="menos" data-index="${index}">−</button>
-
-                    <span>${producto.cantidad}</span>
-
-                    <button class="mas" data-index="${index}">+</button>
-
+                    <small>Subtotal: RD$${subtotal}</small>
                 </div>
 
-                <strong>
-
-                    Subtotal:
-
-                    RD$${subtotal}
-
-                </strong>
-
+                <button onclick="eliminar(${i})">X</button>
             </div>
-
-            <button
-                class="eliminar"
-                data-index="${index}">
-                🗑
-            </button>
-
         `;
 
-        carritoItems.appendChild(card);
+        carritoItems.appendChild(div);
 
     });
 
-    contadorCarrito.innerText = cantidadTotal;
+    carritoTotal.innerText = `Total: RD$${total}`;
+    contadorCarrito.innerText = count;
 
-    carritoTotal.innerHTML = `
+}
 
-        Total:
+window.mas = (i) => {
+    carrito[i].cantidad++;
+    save();
+    renderCarrito();
+};
 
-        <span>
+window.menos = (i) => {
+    carrito[i].cantidad--;
+    if (carrito[i].cantidad <= 0) carrito.splice(i, 1);
+    save();
+    renderCarrito();
+};
 
-        RD$${total}
+window.eliminar = (i) => {
+    carrito.splice(i, 1);
+    save();
+    renderCarrito();
+};
 
-        </span>
+/*==============================
+        FAVORITOS
+==============================*/
 
-    `;
+function renderFavoritos(){
+    contadorFavoritos.innerText = favoritos.length;
+}
 
-    activarBotonesCarrito();
+document.querySelectorAll(".producto").forEach(p => {
+
+    const btn = document.createElement("button");
+
+    btn.innerText = "❤";
+
+    btn.style.position = "absolute";
+    btn.style.top = "10px";
+    btn.style.right = "10px";
+
+    p.style.position = "relative";
+
+    p.appendChild(btn);
+
+    const nombre = p.querySelector("h3").innerText;
+
+    if (favoritos.includes(nombre)) btn.style.color = "red";
+
+    btn.onclick = () => {
+
+        if (favoritos.includes(nombre)) {
+            favoritos = favoritos.filter(f => f !== nombre);
+            btn.style.color = "";
+        } else {
+            favoritos.push(nombre);
+            btn.style.color = "red";
+        }
+
+        localStorage.setItem(STORAGE_FAVORITOS, JSON.stringify(favoritos));
+        renderFavoritos();
+
+    };
+
+});
+
+/*==============================
+        TEMA OSCURO
+==============================*/
+
+function toggleTema(){
+
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        STORAGE_TEMA,
+        document.body.classList.contains("dark") ? "oscuro" : "claro"
+    );
+
+}
+
+function cargarTema(){
+    if (localStorage.getItem(STORAGE_TEMA) === "oscuro") {
+        document.body.classList.add("dark");
+    }
+}
+
+/*==============================
+        WHATSAPP
+==============================*/
+
+document.querySelector(".carrito-total button").onclick = () => {
+
+    if (carrito.length === 0) return toast("Carrito vacío");
+
+    let msg = "Hola, quiero este pedido:%0A%0A";
+
+    let total = 0;
+
+    carrito.forEach(p => {
+        const sub = p.precio * p.cantidad;
+        total += sub;
+        msg += `• ${p.nombre} x${p.cantidad} = RD$${sub}%0A`;
+    });
+
+    msg += `%0ATotal: RD$${total}`;
+
+    window.open(
+        `https://wa.me/18296926964?text=${msg}`,
+        "_blank"
+    );
+
+};
+
+/*==============================
+        TOAST
+==============================*/
+
+function toast(text){
+
+    const div = document.createElement("div");
+
+    div.innerText = text;
+
+    div.style.position = "fixed";
+    div.style.bottom = "20px";
+    div.style.left = "50%";
+    div.style.transform = "translateX(-50%)";
+    div.style.background = "#e91e63";
+    div.style.color = "white";
+    div.style.padding = "10px 20px";
+    div.style.borderRadius = "20px";
+    div.style.zIndex = "9999";
+
+    document.body.appendChild(div);
+
+    setTimeout(() => div.remove(), 2000);
 
 }
 
 /*==============================
- BOTONES DEL CARRITO
+        CARRITO OPEN/CLOSE
 ==============================*/
 
-function activarBotonesCarrito(){
-
-    document.querySelectorAll(".mas").forEach(btn=>{
-
-        btn.onclick=()=>{
-
-            carrito[btn.dataset.index].cantidad++;
-
-            guardarCarrito();
-
-            actualizarCarrito();
-
-        };
-
-    });
-
-    document.querySelectorAll(".menos").forEach(btn=>{
-
-        btn.onclick=()=>{
-
-            let producto =
-                carrito[btn.dataset.index];
-
-            producto.cantidad--;
-
-            if(producto.cantidad<=0){
-
-                carrito.splice(btn.dataset.index,1);
-
-            }
-
-            guardarCarrito();
-
-            actualizarCarrito();
-
-        };
-
-    });
-
-    document.querySelectorAll(".eliminar").forEach(btn=>{
-
-        btn.onclick=()=>{
-
-            carrito.splice(btn.dataset.index,1);
-
-            guardarCarrito();
-
-            actualizarCarrito();
-
-            toast("🗑 Producto eliminado");
-
-        };
-
-    });
-    
-
-}
-/*====================================================
-                FAVORITOS
-====================================================*/
-
-function actualizarFavoritos(){
-
-    contadorFavoritos.innerText = favoritos.length;
-
-    localStorage.setItem(
-        STORAGE_FAVORITOS,
-        JSON.stringify(favoritos)
-    );
-
+function abrirCarrito(){
+    carritoLateral.classList.add("active");
+    overlay.classList.add("active");
 }
 
-document.querySelectorAll(".producto").forEach((producto)=>{
-
-    let favorito = document.createElement("button");
-
-    favorito.className = "btn-favorito";
-
-    favorito.innerHTML = '<i class="fa-solid fa-heart"></i>';
-
-    producto.appendChild(favorito);
-
-    favorito.addEventListener("click",(e)=>{
-
-        e.stopPropagation();
-
-        const nombre = producto.querySelector("h3").innerText;
-
-        if(favoritos.includes(nombre)){
-
-            favoritos = favoritos.filter(item=>item!==nombre);
-
-            favorito.classList.remove("activo");
-
-            toast("💔 Eliminado de favoritos");
-
-        }else{
-
-            favoritos.push(nombre);
-
-            favorito.classList.add("activo");
-
-            toast("❤️ Agregado a favoritos");
-
-        }
-
-        actualizarFavoritos();
-
-    });
-
-    if(favoritos.includes(producto.querySelector("h3").innerText)){
-
-        favorito.classList.add("activo");
-
-    }
-
-});
-
-
-/*====================================================
-                MODO OSCURO
-====================================================*/
-
-function activarModoOscuro(){
-
-    const boton=document.getElementById("modoOscuro");
-
-    if(localStorage.getItem(STORAGE_TEMA)==="oscuro"){
-
-        document.body.classList.add("dark");
-
-    }
-
-    boton.onclick=()=>{
-
-        document.body.classList.toggle("dark");
-
-        localStorage.setItem(
-
-            STORAGE_TEMA,
-
-            document.body.classList.contains("dark")
-            ? "oscuro"
-            : "claro"
-
-        );
-
-    };
-
+function cerrarCarritoFn(){
+    carritoLateral.classList.remove("active");
+    overlay.classList.remove("active");
 }
 
-function cargarTema(){
+/*==============================
+        SAVE
+==============================*/
 
-    if(localStorage.getItem(STORAGE_TEMA)==="oscuro"){
-
-        document.body.classList.add("dark");
-
-    }
-
+function save(){
+    localStorage.setItem(STORAGE_CARRITO, JSON.stringify(carrito));
 }
 
-
-/*====================================================
-                TOAST
-====================================================*/
-
-function toast(texto){
-
-    let aviso=document.createElement("div");
-
-    aviso.className="toast";
-
-    aviso.innerText=texto;
-
-    document.body.appendChild(aviso);
-
-    setTimeout(()=>{
-
-        aviso.classList.add("mostrar");
-
-    },50);
-
-    setTimeout(()=>{
-
-        aviso.classList.remove("mostrar");
-
-        setTimeout(()=>{
-
-            aviso.remove();
-
-        },300);
-
-    },2500);
-
-}
-/*====================================================
-                FAVORITOS
-====================================================*/
-
-function actualizarFavoritos(){
-
-    contadorFavoritos.innerText = favoritos.length;
-
-    localStorage.setItem(
-        STORAGE_FAVORITOS,
-        JSON.stringify(favoritos)
-    );
-
-}
-
-document.querySelectorAll(".producto").forEach((producto)=>{
-
-    let favorito = document.createElement("button");
-
-    favorito.className = "btn-favorito";
-
-    favorito.innerHTML = '<i class="fa-solid fa-heart"></i>';
-
-    producto.appendChild(favorito);
-
-    favorito.addEventListener("click",(e)=>{
-
-        e.stopPropagation();
-
-        const nombre = producto.querySelector("h3").innerText;
-
-        if(favoritos.includes(nombre)){
-
-            favoritos = favoritos.filter(item=>item!==nombre);
-
-            favorito.classList.remove("activo");
-
-            toast("💔 Eliminado de favoritos");
-
-        }else{
-
-            favoritos.push(nombre);
-
-            favorito.classList.add("activo");
-
-            toast("❤️ Agregado a favoritos");
-
-        }
-
-        actualizarFavoritos();
-
-    });
-
-    if(favoritos.includes(producto.querySelector("h3").innerText)){
-
-        favorito.classList.add("activo");
-
-    }
-
-});
-
-
-/*====================================================
-                MODO OSCURO
-====================================================*/
-
-function activarModoOscuro(){
-
-    const boton=document.getElementById("modoOscuro");
-
-    if(localStorage.getItem(STORAGE_TEMA)==="oscuro"){
-
-        document.body.classList.add("dark");
-
-    }
-
-    boton.onclick=()=>{
-
-        document.body.classList.toggle("dark");
-
-        localStorage.setItem(
-
-            STORAGE_TEMA,
-
-            document.body.classList.contains("dark")
-            ? "oscuro"
-            : "claro"
-
-        );
-
-    };
-
-}
-
-function cargarTema(){
-
-    if(localStorage.getItem(STORAGE_TEMA)==="oscuro"){
-
-        document.body.classList.add("dark");
-
-    }
-
-}
-
-
-/*====================================================
-                TOAST
-====================================================*/
-
-function toast(texto){
-
-    let aviso=document.createElement("div");
-
-    aviso.className="toast";
-
-    aviso.innerText=texto;
-
-    document.body.appendChild(aviso);
-
-    setTimeout(()=>{
-
-        aviso.classList.add("mostrar");
-
-    },50);
-
-    setTimeout(()=>{
-
-        aviso.classList.remove("mostrar");
-
-        setTimeout(()=>{
-
-            aviso.remove();
-
-        },300);
-
-    },2500);
-
-}
-/*====================================================
-                CHECKOUT WHATSAPP
-====================================================*/
-
-function activarCheckout(){
-
-    const boton = document.querySelector(".carrito-total button");
-
-    if(!boton) return;
-
-    boton.addEventListener("click",enviarWhatsApp);
-
-}
-
-function enviarWhatsApp(){
-
-    if(carrito.length===0){
-
-        toast("🛒 Tu carrito está vacío");
-
-        return;
-
-    }
-
-    let mensaje="🌸 *Hola, quiero realizar este pedido*%0A%0A";
-
-    let total=0;
-
-    carrito.forEach(producto=>{
-
-        const subtotal=
-            producto.precio*producto.cantidad;
-
-        total+=subtotal;
-
-        mensaje+=
-`• ${producto.nombre}
-Cantidad: ${producto.cantidad}
-Precio: RD$${producto.precio}
-Subtotal: RD$${subtotal}
-
-`;
-
-    });
-
-    mensaje+="------------------------%0A";
-
-    mensaje+=`💰 Total: RD$${total}%0A%0A`;
-
-    mensaje+="Gracias 🌸";
-
-    window.open(
-
-        `https://wa.me/18296926964?text=${encodeURIComponent(mensaje)}`,
-
-        "_blank"
-
-    );
-
-}
-
-/*====================================================
-                VACIAR CARRITO
-====================================================*/
-
-function vaciarCarrito(){
-
-    if(carrito.length===0){
-
-        toast("El carrito ya está vacío.");
-
-        return;
-
-    }
-
-    if(confirm("¿Vaciar todo el carrito?")){
-
-        carrito=[];
-
-        guardarCarrito();
-
-        actualizarCarrito();
-
-        toast("🗑 Carrito vaciado");
-
-    }
-
-}
-
-/*====================================================
-            BOTÓN VACIAR CARRITO
-====================================================*/
-
-const botonVaciar=document.createElement("button");
-
-botonVaciar.innerText="Vaciar carrito";
-
-botonVaciar.className="vaciar-carrito";
-
-document.querySelector(".carrito-total")
-.appendChild(botonVaciar);
-
-botonVaciar.onclick=vaciarCarrito;
-
-
-/*====================================================
-                CONTADORES
-====================================================*/
-
-let contadoresEjecutados=false;
-
-function activarContadores(){
-
-    window.addEventListener("scroll",()=>{
-
-        if(contadoresEjecutados) return;
-
-        const seccion=document.querySelector(".contador");
-
-        if(!seccion) return;
-
-        if(seccion.getBoundingClientRect().top<window.innerHeight-100){
-
-            contadoresEjecutados=true;
-
-            animarNumero("#clientes",1500);
-
-            animarNumero("#ventas",800);
-
-            animarNumero("#envios",1000);
-
-            animarDecimal("#calificacion",4.9);
-
-        }
-
-    });
-
-}
-
-function animarNumero(id,valor){
-
-    let numero=0;
-
-    const elemento=document.querySelector(id);
-
-    const velocidad=Math.max(1,Math.floor(valor/100));
-
-    const intervalo=setInterval(()=>{
-
-        numero+=velocidad;
-
-        if(numero>=valor){
-
-            numero=valor;
-
-            clearInterval(intervalo);
-
-        }
-
-        elemento.innerText=numero;
-
-    },20);
-
-}
-
-function animarDecimal(id,valor){
-
-    let numero=0;
-
-    const elemento=document.querySelector(id);
-
-    const intervalo=setInterval(()=>{
-
-        numero+=0.1;
-
-        if(numero>=valor){
-
-            numero=valor;
-
-            clearInterval(intervalo);
-
-        }
-
-        elemento.innerText=numero.toFixed(1);
-
-    },40);
-
-}
-
-/*====================================================
-                FAQ
-====================================================*/
+/*==============================
+        FAQ
+==============================*/
 
 function activarFAQ(){
 
-    document.querySelectorAll(".faq-item").forEach(item=>{
+    document.querySelectorAll(".faq-item button").forEach(btn => {
 
-        const boton=item.querySelector("button");
+        btn.onclick = () => {
 
-        const contenido=item.querySelector("div");
+            const div = btn.nextElementSibling;
 
-        contenido.style.maxHeight="0px";
-
-        contenido.style.overflow="hidden";
-
-        contenido.style.transition="0.35s";
-
-        boton.onclick=()=>{
-
-            if(contenido.style.maxHeight==="0px"){
-
-                contenido.style.maxHeight=
-
-                    contenido.scrollHeight+"px";
-
-            }else{
-
-                contenido.style.maxHeight="0px";
-
-            }
+            div.style.display = div.style.display === "block" ? "none" : "block";
 
         };
 
@@ -832,4 +333,53 @@ function activarFAQ(){
 
 }
 
-console.log("🌸 Lilith Bloms PRO cargado correctamente.");
+/*==============================
+        CONTADORES
+==============================*/
+
+function activarContadores(){
+
+    const section = document.querySelector(".contador");
+
+    let done = false;
+
+    window.addEventListener("scroll", () => {
+
+        if (done) return;
+
+        if (section.getBoundingClientRect().top < window.innerHeight) {
+
+            done = true;
+
+            anim("#clientes", 1500);
+            anim("#ventas", 800);
+            anim("#envios", 1000);
+            anim("#calificacion", 4.9, true);
+
+        }
+
+    });
+
+}
+
+function anim(id, val, dec = false){
+
+    let el = document.querySelector(id);
+    let i = 0;
+
+    let interval = setInterval(() => {
+
+        i += dec ? 0.1 : 10;
+
+        if (i >= val) {
+            i = val;
+            clearInterval(interval);
+        }
+
+        el.innerText = dec ? i.toFixed(1) : Math.floor(i);
+
+    }, 20);
+
+}
+
+console.log("Lilith Blooms PRO listo 🌸");
