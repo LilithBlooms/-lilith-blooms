@@ -505,4 +505,76 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 900);
 
 });
+/* =========================
+🌸 LILITH BLOMS EFFECT PATCH FINAL
+========================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    // 💗 corazones suaves
+    setInterval(() => {
+        if (document.hidden) return;
+        crearCorazon();
+    }, 1600);
+
+    // ✨ brillitos suaves
+    setInterval(() => {
+        if (document.hidden) return;
+        crearEfectoAesthetic();
+    }, 1400);
+
+    // 🤖 chat styling fix sin tocar lógica
+    const chat = document.getElementById("ia-chat");
+    const boton = document.getElementById("ia-boton");
+
+    if (chat) {
+        chat.style.borderRadius = "20px";
+        chat.style.overflow = "hidden";
+    }
+
+    if (boton) {
+        boton.style.background = "#F283AE";
+    }
+
+});
+
+/* 💗 CORAZONES PASTEL */
+function crearCorazon() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart-float");
+
+    const colores = ["#FAC1B5", "#F283AE", "#C59FBE", "#C6C870"];
+
+    heart.innerText = "❤";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.fontSize = (10 + Math.random() * 14) + "px";
+    heart.style.color = colores[Math.floor(Math.random() * colores.length)];
+    heart.style.opacity = "0.75";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 7500);
+}
+
+/* ✨ BRILLITOS */
+function crearEfectoAesthetic() {
+
+    const items = ["✨", "💖", "🌸"];
+
+    const el = document.createElement("div");
+    el.className = "floating-item";
+
+    el.innerText = items[Math.floor(Math.random() * items.length)];
+    el.style.left = Math.random() * window.innerWidth + "px";
+    el.style.fontSize = (11 + Math.random() * 10) + "px";
+
+    const colores = ["#FAC1B5", "#F283AE", "#C59FBE", "#98B8B9"];
+    el.style.color = colores[Math.floor(Math.random() * colores.length)];
+
+    el.style.opacity = "0.7";
+
+    document.body.appendChild(el);
+
+    setTimeout(() => el.remove(), 7000);
+}
 
