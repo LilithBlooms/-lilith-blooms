@@ -1,21 +1,6 @@
-/*====================================================
-                LILITH BLOMS PRO FINAL
-====================================================*/
-
-const STORAGE_CARRITO = "lb_carrito";
-const STORAGE_FAVORITOS = "lb_favoritos";
-const STORAGE_TEMA = "lb_tema";
-
-/*==============================
-        ESTADO GLOBAL
-==============================*/
-
-let carrito = JSON.parse(localStorage.getItem(STORAGE_CARRITO)) || [];
-let favoritos = JSON.parse(localStorage.getItem(STORAGE_FAVORITOS)) || [];
-
-/*==============================
-        ELEMENTOS
-==============================*/
+/*======================
+LILITH BLOOMS CLEAN JS
+======================*/
 
 const carritoBtn = document.getElementById("carrito");
 const favoritosBtn = document.getElementById("favoritos");
@@ -30,80 +15,79 @@ const carritoTotal = document.querySelector(".carrito-total h3");
 const contadorCarrito = document.querySelector("#carrito span");
 const contadorFavoritos = document.querySelector("#favoritos span");
 
-/*==============================
-        INICIO
-==============================*/
+let carrito = [];
+let favoritos = [];
+
+/*======================
+INIT
+======================*/
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    cargarTema();
-    renderCarrito();
-    renderFavoritos();
     activarProductos();
     activarUI();
+    activarFavoritos();
     activarFAQ();
-    activarContadores();
+    activarChat();
 });
 
-/*==============================
-        UI GENERAL
-==============================*/
+/*======================
+UI
+======================*/
 
-function activarUI(){
+function activarUI() {
 
-    carritoBtn.onclick = abrirCarrito;
+    carritoBtn.onclick = () => {
+        carritoLateral.classList.add("active");
+        overlay.classList.add("active");
+    };
+
     cerrarCarrito.onclick = cerrarCarritoFn;
     overlay.onclick = cerrarCarritoFn;
 
-    document.getElementById("modoOscuro").onclick = toggleTema;
+    document.getElementById("modoOscuro").onclick = () => {
+        document.body.classList.toggle("dark");
+    };
 }
 
-/*==============================
-        CARRITO
-==============================*/
+function cerrarCarritoFn() {
+    carritoLateral.classList.remove("active");
+    overlay.classList.remove("active");
+}
 
-function activarProductos(){
+/*======================
+PRODUCTOS
+======================*/
+
+function activarProductos() {
 
     document.querySelectorAll(".producto button").forEach(btn => {
 
         btn.addEventListener("click", () => {
 
-            const producto = btn.closest(".producto");
+            const p = btn.closest(".producto");
 
-            const nombre = producto.querySelector("h3").innerText;
+            const nombre = p.querySelector("h3").innerText;
+            const precio = parseInt(p.querySelector("p").innerText.replace("RD$", "").replace(",", ""));
+            const imagen = p.querySelector("img").src;
 
-            const precio = parseInt(
-                producto.querySelector("p").innerText
-                .replace("RD$", "")
-                .replace(",", "")
-            );
-
-            const imagen = producto.querySelector("img").src;
-
-            const existe = carrito.find(p => p.nombre === nombre);
+            const existe = carrito.find(i => i.nombre === nombre);
 
             if (existe) {
                 existe.cantidad++;
             } else {
-                carrito.push({
-                    nombre,
-                    precio,
-                    imagen,
-                    cantidad: 1
-                });
+                carrito.push({ nombre, precio, imagen, cantidad: 1 });
             }
 
-            save();
             renderCarrito();
-            toast("🛒 Agregado al carrito");
+            toast("Agregado al carrito 🌸");
 
         });
 
     });
-
 }
 
-function renderCarrito(){
+function renderCarrito() {
 
     carritoItems.innerHTML = "";
 
@@ -119,462 +103,120 @@ function renderCarrito(){
 
     carrito.forEach((p, i) => {
 
-        const subtotal = p.precio * p.cantidad;
-        total += subtotal;
+        total += p.precio * p.cantidad;
         count += p.cantidad;
 
         const div = document.createElement("div");
 
         div.innerHTML = `
-            <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
-                <img src="${p.imagen}" width="50" style="border-radius:10px">
-
-                <div style="flex:1">
-                    <strong>${p.nombre}</strong>
-                    <p>RD$${p.precio}</p>
-
-                    <div>
-                        <button onclick="menos(${i})">-</button>
-                        ${p.cantidad}
-                        <button onclick="mas(${i})">+</button>
-                    </div>
-
-                    <small>Subtotal: RD$${subtotal}</small>
-                </div>
-
-                <button onclick="eliminar(${i})">X</button>
+            <img src="${p.imagen}" width="50" style="border-radius:10px">
+            <div style="flex:1">
+                <strong>${p.nombre}</strong>
+                <p>RD$${p.precio}</p>
+                <small>Cant: ${p.cantidad}</small>
             </div>
         `;
 
         carritoItems.appendChild(div);
-
     });
 
     carritoTotal.innerText = `Total: RD$${total}`;
     contadorCarrito.innerText = count;
-
 }
 
-window.mas = (i) => {
-    carrito[i].cantidad++;
-    save();
-    renderCarrito();
-};
+/*======================
+FAVORITOS
+======================*/
 
-window.menos = (i) => {
-    carrito[i].cantidad--;
-    if (carrito[i].cantidad <= 0) carrito.splice(i, 1);
-    save();
-    renderCarrito();
-};
+function activarFavoritos() {
 
-window.eliminar = (i) => {
-    carrito.splice(i, 1);
-    save();
-    renderCarrito();
-};
+    document.querySelectorAll(".producto").forEach(p => {
 
-/*==============================
-        FAVORITOS
-==============================*/
+        const btn = document.createElement("button");
+        btn.classList.add("btn-favorito");
+        btn.innerHTML = "❤";
+        p.appendChild(btn);
 
-function renderFavoritos(){
-    contadorFavoritos.innerText = favoritos.length;
-}
+        const nombre = p.querySelector("h3").innerText;
 
-document.querySelectorAll(".producto").forEach(p => {
+        btn.onclick = () => {
 
-    const btn = document.createElement("button");
+            if (favoritos.includes(nombre)) {
+                favoritos = favoritos.filter(f => f !== nombre);
+                btn.classList.remove("activo");
+            } else {
+                favoritos.push(nombre);
+                btn.classList.add("activo");
+            }
 
-    btn.innerText = "❤";
-
-    p.appendChild(btn);
-
-    const nombre = p.querySelector("h3").innerText;
-
-    if (favoritos.includes(nombre)) btn.style.color = "red";
-
-    btn.onclick = () => {
-
-        if (favoritos.includes(nombre)) {
-            favoritos = favoritos.filter(f => f !== nombre);
-            btn.style.color = "";
-        } else {
-            favoritos.push(nombre);
-            btn.style.color = "red";
-        }
-
-        localStorage.setItem(STORAGE_FAVORITOS, JSON.stringify(favoritos));
-        renderFavoritos();
-
-    };
-
-});
-
-/*==============================
-        TEMA OSCURO
-==============================*/
-
-function toggleTema(){
-
-    document.body.classList.toggle("dark");
-
-    localStorage.setItem(
-        STORAGE_TEMA,
-        document.body.classList.contains("dark") ? "oscuro" : "claro"
-    );
-
-}
-
-function cargarTema(){
-    if (localStorage.getItem(STORAGE_TEMA) === "oscuro") {
-        document.body.classList.add("dark");
-    }
-}
-
-/*==============================
-        WHATSAPP
-==============================*/
-
-document.querySelector(".carrito-total button").onclick = () => {
-
-    if (carrito.length === 0) return toast("Carrito vacío");
-
-    let msg = "Hola, quiero este pedido:%0A%0A";
-
-    let total = 0;
-
-    carrito.forEach(p => {
-        const sub = p.precio * p.cantidad;
-        total += sub;
-        msg += `• ${p.nombre} x${p.cantidad} = RD$${sub}%0A`;
+            contadorFavoritos.innerText = favoritos.length;
+        };
     });
+}
 
-    msg += `%0ATotal: RD$${total}`;
+/*======================
+FAQ
+======================*/
 
-    window.open(
-        `https://wa.me/18296926964?text=${msg}`,
-        "_blank"
-    );
+function activarFAQ() {
 
-};
+    document.querySelectorAll(".faq-item button").forEach(btn => {
+        btn.onclick = () => {
+            const div = btn.nextElementSibling;
+            div.style.display = div.style.display === "block" ? "none" : "block";
+        };
+    });
+}
 
-/*==============================
-        TOAST
-==============================*/
+/*======================
+TOAST
+======================*/
 
-function toast(text){
+function toast(text) {
 
     const div = document.createElement("div");
-
+    div.className = "toast";
     div.innerText = text;
-
-    div.style.position = "fixed";
-    div.style.bottom = "20px";
-    div.style.left = "50%";
-    div.style.transform = "translateX(-50%)";
-    div.style.background = "#e91e63";
-    div.style.color = "white";
-    div.style.padding = "10px 20px";
-    div.style.borderRadius = "20px";
-    div.style.zIndex = "9999";
 
     document.body.appendChild(div);
 
     setTimeout(() => div.remove(), 2000);
-
 }
-
-/*==============================
-        CARRITO OPEN/CLOSE
-==============================*/
-
-function abrirCarrito(){
-    carritoLateral.classList.add("active");
-    overlay.classList.add("active");
-}
-
-function cerrarCarritoFn(){
-    carritoLateral.classList.remove("active");
-    overlay.classList.remove("active");
-}
-
-/*==============================
-        SAVE
-==============================*/
-
-function save(){
-    localStorage.setItem(STORAGE_CARRITO, JSON.stringify(carrito));
-}
-
-/*==============================
-        FAQ
-==============================*/
-
-function activarFAQ(){
-
-    document.querySelectorAll(".faq-item button").forEach(btn => {
-
-        btn.onclick = () => {
-
-            const div = btn.nextElementSibling;
-
-            div.style.display = div.style.display === "block" ? "none" : "block";
-
-        };
-
-    });
-
-}
-
-/*==============================
-        CONTADORES
-==============================*/
-
-function activarContadores(){
-
-    const section = document.querySelector(".contador");
-
-    let done = false;
-
-    window.addEventListener("scroll", () => {
-
-        if (done) return;
-
-        if (section.getBoundingClientRect().top < window.innerHeight) {
-
-            done = true;
-
-            anim("#clientes", 1500);
-            anim("#ventas", 800);
-            anim("#envios", 1000);
-            anim("#calificacion", 4.9, true);
-
-        }
-
-    });
-
-}
-
-function anim(id, val, dec = false){
-
-    let el = document.querySelector(id);
-    let i = 0;
-
-    let interval = setInterval(() => {
-
-        i += dec ? 0.1 : 10;
-
-        if (i >= val) {
-            i = val;
-            clearInterval(interval);
-        }
-
-        el.innerText = dec ? i.toFixed(1) : Math.floor(i);
-
-    }, 20);
-
-}
-
-console.log("Lilith Blooms PRO listo 🌸");
-
 
 /*======================
-IA ASISTENTE
+CHAT IA (CLEAN)
 ======================*/
 
-const iaBoton = document.getElementById("ia-boton");
-const iaChat = document.getElementById("ia-chat");
-const iaClose = document.getElementById("ia-close");
-const iaEnviar = document.getElementById("ia-enviar");
-const iaTexto = document.getElementById("ia-texto");
-const iaMensajes = document.getElementById("ia-mensajes");
+function activarChat() {
 
-iaBoton.onclick = () => {
-    iaChat.style.display = "flex";
-    if (iaMensajes.innerHTML === "") {
-        bot("Hola 🌸 soy el asistente de Lilith Blooms. ¿Qué flor buscas?");
-    }
-};
-
-iaClose.onclick = () => {
-    iaChat.style.display = "none";
-};
-
-iaEnviar.onclick = enviarIA;
-
-iaTexto.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") enviarIA();
-});
-
-function enviarIA() {
-    const texto = iaTexto.value.trim();
-    if (!texto) return;
-
-    user(texto);
-    iaTexto.value = "";
-
-    setTimeout(() => responder(texto.toLowerCase()), 500);
-}
-
-function user(msg) {
-    iaMensajes.innerHTML += `<div class="msj user">Tú: ${msg}</div>`;
-    iaMensajes.scrollTop = iaMensajes.scrollHeight;
-}
-
-function bot(msg) {
-    iaMensajes.innerHTML += `<div class="msj bot">🌸 ${msg}</div>`;
-    iaMensajes.scrollTop = iaMensajes.scrollHeight;
-}
-
-function responder(msg) {
-
-    if (msg.includes("rosa")) {
-        bot("Las rosas son perfectas para amor y detalles románticos 💖");
-    }
-    else if (msg.includes("girasol")) {
-        bot("Los girasoles representan alegría y energía 🌻");
-    }
-    else if (msg.includes("regalo")) {
-        bot("Te recomiendo un Bouquet Romantic o una caja premium 🎁");
-    }
-    else if (msg.includes("precio")) {
-        bot("Nuestros precios van desde RD$900 en adelante 🌸");
-    }
-    else {
-        bot("Puedo ayudarte a elegir flores, regalos o personalizar tu ramo 💐");
-    }
-}
-function crearCorazon() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart-float");
-    heart.innerText = "❤";
-
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.fontSize = (10 + Math.random() * 20) + "px";
-
-    document.body.appendChild(heart);
-
-    setTimeout(() => heart.remove(), 6000);
-}
-
-
-function crearEfectoAesthetic() {
-
-    const items = ["❤", "✨", "💖", "🌸"];
-
-    const el = document.createElement("div");
-
-    el.className = "floating-item";
-    el.innerText = items[Math.floor(Math.random() * items.length)];
-
-    // posición aleatoria
-    el.style.left = Math.random() * window.innerWidth + "px";
-
-    // tamaño random suave
-    const size = 12 + Math.random() * 18;
-    el.style.fontSize = size + "px";
-
-    // colores aesthetic suaves
-    const colors = ["#ff4d88", "#ff85c1", "#ffd1dc", "#ffffff", "#ffb6c1"];
-    el.style.color = colors[Math.floor(Math.random() * colors.length)];
-
-    // duración random (para que no sea repetitivo)
-    el.style.animationDuration = (4 + Math.random() * 3) + "s";
-
-    document.body.appendChild(el);
-
-    setTimeout(() => {
-        el.remove();
-    }, 7000);
-}
-
-// ritmo suave (no saturado)
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    // control de intensidad (evita saturación o lag en móvil)
-    setInterval(() => {
-        if (document.hidden) return;
-        crearCorazon();
-    }, 1200);
-
-    setInterval(() => {
-        if (document.hidden) return;
-        crearEfectoAesthetic();
-    }, 900);
-
-});
-/* =========================
-🌸 LILITH BLOMS EFFECT PATCH FINAL
-========================= */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    // 💗 corazones suaves
-    setInterval(() => {
-        if (document.hidden) return;
-        crearCorazon();
-    }, 1600);
-
-    // ✨ brillitos suaves
-    setInterval(() => {
-        if (document.hidden) return;
-        crearEfectoAesthetic();
-    }, 1400);
-
-    // 🤖 chat styling fix sin tocar lógica
     const chat = document.getElementById("ia-chat");
-    const boton = document.getElementById("ia-boton");
+    const open = document.getElementById("ia-boton");
+    const close = document.getElementById("ia-close");
+    const send = document.getElementById("ia-enviar");
+    const input = document.getElementById("ia-texto");
+    const box = document.getElementById("ia-mensajes");
 
-    if (chat) {
-        chat.style.borderRadius = "20px";
-        chat.style.overflow = "hidden";
+    open.onclick = () => {
+        chat.style.display = "flex";
+    };
+
+    close.onclick = () => {
+        chat.style.display = "none";
+    };
+
+    send.onclick = enviar;
+
+    function enviar() {
+
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        box.innerHTML += `<div class="user">Tú: ${msg}</div>`;
+        input.value = "";
+
+        setTimeout(() => {
+            box.innerHTML += `<div class="bot">🌸 Te ayudo con eso</div>`;
+            box.scrollTop = box.scrollHeight;
+        }, 400);
     }
-
-    if (boton) {
-        boton.style.background = "#F283AE";
-    }
-
-});
-
-/* 💗 CORAZONES PASTEL */
-function crearCorazon() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart-float");
-
-    const colores = ["#FAC1B5", "#F283AE", "#C59FBE", "#C6C870"];
-
-    heart.innerText = "❤";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.fontSize = (10 + Math.random() * 14) + "px";
-    heart.style.color = colores[Math.floor(Math.random() * colores.length)];
-    heart.style.opacity = "0.75";
-
-    document.body.appendChild(heart);
-
-    setTimeout(() => heart.remove(), 7500);
 }
-
-/* ✨ BRILLITOS */
-function crearEfectoAesthetic() {
-
-    const items = ["✨", "💖", "🌸"];
-
-    const el = document.createElement("div");
-    el.className = "floating-item";
-
-    el.innerText = items[Math.floor(Math.random() * items.length)];
-    el.style.left = Math.random() * window.innerWidth + "px";
-    el.style.fontSize = (11 + Math.random() * 10) + "px";
-
-    const colores = ["#FAC1B5", "#F283AE", "#C59FBE", "#98B8B9"];
-    el.style.color = colores[Math.floor(Math.random() * colores.length)];
-
-    el.style.opacity = "0.7";
-
-    document.body.appendChild(el);
-
-    setTimeout(() => el.remove(), 7000);
-}
-
