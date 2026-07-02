@@ -1261,3 +1261,99 @@ IA CHAT
 body {
     letter-spacing: 0.2px;
 }
+
+/* =========================
+🌸 LILITH BLOMS PASTEL PATCH FINAL
+========================= */
+
+:root {
+    --peach: #FAC1B5;
+    --lavanda: #C59FBE;
+    --rosa: #F283AE;
+    --menta: #98B8B9;
+    --verde: #C6C870;
+}
+
+/* suavizado general Pinterest aesthetic */
+body {
+    letter-spacing: 0.2px;
+}
+
+/* botones suaves sin romper layout */
+button,
+.btnPrincipal,
+.producto button,
+.personalizar button,
+.contacto button {
+    border-radius: 25px !important;
+    transition: 0.3s ease;
+}
+
+/* hover elegante */
+button:hover {
+    transform: translateY(-2px);
+}
+
+/* =======================
+💗 CORAZONES
+======================= */
+
+.heart-float {
+    position: fixed;
+    bottom: -20px;
+    font-size: 18px;
+    animation: subir 7s linear forwards;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.75;
+}
+
+/* =======================
+✨ BRILLITOS
+======================= */
+
+.floating-item {
+    position: fixed;
+    bottom: -30px;
+    animation: floatUp 7s linear forwards;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.7;
+}
+
+/* =======================
+🤖 CHAT IA ESTÉTICO
+======================= */
+
+#ia-boton {
+    background: #F283AE !important;
+}
+
+#ia-header {
+    background: #F283AE !important;
+    border-radius: 20px 20px 0 0;
+}
+
+/* =======================
+TOQUES PASTEL SUAVES
+======================= */
+
+.producto p {
+    color: #F283AE;
+}
+
+.card-coleccion h3 {
+    color: #F283AE;
+}
+
+.numero {
+    background: #F283AE;
+}
+
+.flecha {
+    color: #F283AE;
+}
+
+.contador h2 {
+    color: #F283AE;
+}
